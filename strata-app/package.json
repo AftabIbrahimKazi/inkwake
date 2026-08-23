@@ -1,0 +1,31 @@
+{
+  "name": "strata-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "strata:watch": "strata-css --watch",
+    "strata:build": "strata-css --build",
+    "dev": "concurrently \"npm:strata:watch\" \"next dev\"",
+    "build": "npm run strata:build && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "lint:css": "stylelint \"src/app/globals.css\" \"strata.css\" --config ../coding-standards/tooling/stylelint.config.cjs"
+  },
+  "dependencies": {
+    "next": "16.3.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "strata-css": "^1.8.17"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^10.0.5",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.2",
+    "stylelint": "^17.14.1",
+    "stylelint-order": "^8.1.1",
+    "typescript": "^5"
+  }
+}

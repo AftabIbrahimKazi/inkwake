@@ -1,0 +1,245 @@
+:root {
+  /* Typography */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  --space-5xl: 96px;
+
+  /* Colour palette (raw values) */
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-near-black: #111111;
+  --color-dim-bg: #1a1a1a;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-600: #525252;
+  --color-magenta: #ff3d9a;
+  --color-violet: #7c3aed;
+  --color-cyan-bright: #22d3ee;
+
+  /* Font weight */
+  --font-weight-bold: 700;
+
+  /* Duration */
+  --duration-marquee: 30s;
+  --duration-marquee-fast: 20s;
+
+  /* Semantic colour tokens — dark theme is the default palette */
+  --color-bg-hero: var(--color-black);
+  --color-text-heading: var(--color-white);
+  --color-text-muted: var(--color-neutral-400);
+  --color-bg-surface: var(--color-black);
+  --color-line-subtle: var(--color-neutral-400);
+
+  /* Brand accent — constant across all themes (see coding-standards gap AI-12,
+     resolved 2026-08-24: signature "iw-"; colours web-researched, not invented ad hoc) */
+  --color-brand-accent: var(--color-violet);
+  --color-brand-accent-alt: var(--color-magenta);
+  --color-brand-gradient-start: var(--color-magenta);
+  --color-brand-gradient-end: var(--color-violet);
+}
+
+/* Strata's own theme system natively supports "dim" as a first-class value
+   (see node_modules/strata-css/src/layers/base.js) — unlike Bootstrap, no
+   shade-splitting workaround is needed. data-st-theme drives both Strata's
+   own components/utilities AND our own tokens below. */
+[data-st-theme="light"] {
+  --color-bg-hero: var(--color-white);
+  --color-text-heading: var(--color-near-black);
+  --color-text-muted: var(--color-neutral-600);
+  --color-bg-surface: var(--color-white);
+  --color-line-subtle: var(--color-neutral-300);
+}
+
+[data-st-theme="dim"] {
+  --color-bg-hero: var(--color-dim-bg);
+  --color-text-heading: var(--color-neutral-200);
+  --color-text-muted: var(--color-neutral-400);
+  --color-bg-surface: var(--color-dim-bg);
+  --color-line-subtle: var(--color-neutral-600);
+}
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-heading);
+  background: var(--color-bg-hero);
+  font-family: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
+  transition: background var(--st-duration-theme) ease, color var(--st-duration-theme) ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.iw-brand-gradient {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(to right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
+  background-clip: text;
+  color: transparent;
+}
+
+.iw-nav-link,
+.iw-nav-heading {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--st-duration-theme) var(--st-easing);
+}
+
+.iw-nav-heading {
+  color: var(--color-text-heading);
+}
+
+.iw-nav-link:hover {
+  color: var(--color-brand-accent);
+}
+
+.iw-column-heading {
+  color: var(--color-text-heading);
+}
+
+.iw-promo-panel {
+  background: linear-gradient(to bottom right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
+}
+
+.iw-icon-btn {
+  color: var(--color-text-muted);
+  transition: color var(--st-duration-theme) var(--st-easing);
+}
+
+.iw-icon-btn:hover {
+  color: var(--color-brand-accent);
+}
+
+.iw-cart-badge {
+  align-items: center;
+  background: var(--color-brand-accent);
+  border-radius: 50%;
+  color: var(--color-white);
+  display: flex;
+  font-size: var(--font-size-xs);
+  height: var(--space-lg);
+  justify-content: center;
+  position: absolute;
+  right: calc(var(--space-sm) * -1);
+  top: calc(var(--space-sm) * -1);
+  width: var(--space-lg);
+}
+
+.iw-theme-toggle {
+  background: transparent;
+  border: 1px solid var(--color-line-subtle);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs) var(--space-md);
+  text-transform: capitalize;
+  transition: color var(--st-duration-theme) var(--st-easing);
+}
+
+.iw-theme-toggle:hover {
+  color: var(--color-text-heading);
+}
+
+.iw-chevron {
+  transition: transform var(--st-duration-theme) var(--st-easing);
+}
+
+[aria-expanded="true"] .iw-chevron {
+  transform: rotate(180deg);
+}
+
+.iw-subscribe-btn {
+  background: var(--color-brand-accent);
+  border: 0;
+  color: var(--color-white);
+  transition: background var(--st-duration-theme) var(--st-easing);
+}
+
+.iw-subscribe-btn:hover {
+  background: var(--color-brand-accent-alt);
+}
+
+.iw-newsletter-input {
+  background: transparent;
+  border: 1px solid var(--color-line-subtle);
+  color: var(--color-text-heading);
+}
+
+.iw-newsletter-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.iw-badge-dot {
+  background: var(--color-brand-accent);
+  border-radius: 50%;
+  display: inline-block;
+  height: var(--space-sm);
+  width: var(--space-sm);
+}
+
+.iw-marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.iw-marquee-track {
+  animation: iw-marquee-scroll var(--duration-marquee) linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.iw-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.iw-marquee-track--fast {
+  animation-duration: var(--duration-marquee-fast);
+}
+
+@keyframes iw-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

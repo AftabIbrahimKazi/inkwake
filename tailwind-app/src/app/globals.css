@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+:root {
+  /* Typography */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  --space-5xl: 96px;
+
+  /* Colour palette (raw values) */
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-near-black: #111111;
+  --color-dim-bg: #1a1a1a;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-600: #525252;
+  --color-magenta: #ff3d9a;
+  --color-violet: #7c3aed;
+  --color-cyan-bright: #22d3ee;
+
+  /* Font weight */
+  --font-weight-bold: 700;
+
+  /* Duration */
+  --duration-theme: 0.2s;
+  --duration-marquee: 30s;
+  --duration-marquee-fast: 20s;
+
+  /* Semantic colour tokens — dark theme is the default palette */
+  --color-bg-hero: var(--color-black);
+  --color-text-heading: var(--color-white);
+  --color-text-muted: var(--color-neutral-400);
+  --color-bg-surface: var(--color-black);
+  --color-line-subtle: var(--color-neutral-400);
+
+  /* Brand accent — constant across all themes (see coding-standards gap AI-12: */
+  /* chosen from a web-researched anime/streetwear-adjacent neon palette, not invented ad hoc) */
+  --color-brand-accent: var(--color-violet);
+  --color-brand-accent-alt: var(--color-magenta);
+  --color-brand-highlight: var(--color-cyan-bright);
+  --color-brand-gradient-start: var(--color-magenta);
+  --color-brand-gradient-end: var(--color-violet);
+}
+
+[data-theme="light"] {
+  --color-bg-hero: var(--color-white);
+  --color-text-heading: var(--color-near-black);
+  --color-text-muted: var(--color-neutral-600);
+  --color-bg-surface: var(--color-white);
+  --color-line-subtle: var(--color-neutral-300);
+}
+
+[data-theme="dim"] {
+  --color-bg-hero: var(--color-dim-bg);
+  --color-text-heading: var(--color-neutral-200);
+  --color-text-muted: var(--color-neutral-400);
+  --color-bg-surface: var(--color-dim-bg);
+  --color-line-subtle: var(--color-neutral-600);
+}
+
+@theme inline {
+  --color-hero-bg: var(--color-bg-hero);
+  --color-heading: var(--color-text-heading);
+  --color-muted: var(--color-text-muted);
+  --color-surface: var(--color-bg-surface);
+  --color-border-subtle: var(--color-line-subtle);
+  --color-accent: var(--color-brand-accent);
+  --color-accent-alt: var(--color-brand-accent-alt);
+  --color-highlight: var(--color-brand-highlight);
+  --color-gradient-start: var(--color-brand-gradient-start);
+  --color-gradient-end: var(--color-brand-gradient-end);
+  --font-sans: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono);
+
+  /* Alias shared type/spacing tokens into Tailwind's own scale keys */
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-md: var(--font-size-md);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+  --text-5xl: var(--font-size-5xl);
+
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+  --spacing-3xl: var(--space-3xl);
+  --spacing-4xl: var(--space-4xl);
+  --spacing-5xl: var(--space-5xl);
+}
+
+body {
+  background: var(--color-bg-hero);
+  color: var(--color-text-heading);
+  font-family: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
+  transition: background var(--duration-theme) ease, color var(--duration-theme) ease;
+}
+
+.iw-marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.iw-marquee-track {
+  animation: iw-marquee-scroll var(--duration-marquee) linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.iw-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.iw-marquee-track--fast {
+  animation-duration: var(--duration-marquee-fast);
+}
+
+@keyframes iw-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

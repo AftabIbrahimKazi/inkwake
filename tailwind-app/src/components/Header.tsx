@@ -1,0 +1,495 @@
+import AnnouncementBar from "./AnnouncementBar";
+
+const MEGA_CATEGORIES = [
+  {
+    label: "Figures",
+    columns: [
+      {
+        heading: "Shop by type",
+        links: ["New releases", "Pre-orders", "Scale figures", "Nendoroids", "Prize figures", "Statues"],
+      },
+      {
+        heading: "Shop by price",
+        links: ["Under $25", "$25 – $50", "$50 – $100", "$100+"],
+      },
+      {
+        heading: "Shop by size",
+        links: ["Mini", "Standard", "Deluxe", "Life-size"],
+      },
+      {
+        heading: "Browse",
+        links: ["Best sellers", "New arrivals", "Staff picks", "Restocks"],
+      },
+    ],
+    promo: {
+      title: "New Arrivals",
+      copy: "This week's figure drops.",
+      cta: "Shop new arrivals",
+    },
+  },
+  {
+    label: "Apparel",
+    columns: [
+      {
+        heading: "Shop by type",
+        links: ["T-shirts", "Hoodies", "Jackets", "Sweatpants", "Accessories"],
+      },
+      {
+        heading: "Shop by size",
+        links: ["XS – S", "M – L", "XL – 2XL", "Plus size"],
+      },
+      {
+        heading: "Shop by style",
+        links: ["Streetwear", "Minimalist", "Graphic tees", "Limited drops"],
+      },
+      {
+        heading: "Browse",
+        links: ["Best sellers", "New arrivals", "Sale", "Limited"],
+      },
+    ],
+    promo: {
+      title: "Streetwear Drop",
+      copy: "Limited-run apparel, restocked weekly.",
+      cta: "Shop apparel",
+    },
+  },
+  {
+    label: "Art Prints",
+    columns: [
+      {
+        heading: "Shop by type",
+        links: ["Posters", "Canvas", "Postcards", "Frames", "Stickers"],
+      },
+      {
+        heading: "Shop by size",
+        links: ["A5", "A4", "A3", "Oversized"],
+      },
+      {
+        heading: "Browse",
+        links: ["Best sellers", "New arrivals", "Staff picks", "Sale"],
+      },
+      {
+        heading: "Shop by room",
+        links: ["Living room", "Bedroom", "Office", "Desk"],
+      },
+    ],
+    promo: {
+      title: "Print Collection",
+      copy: "Original, self-generated art only.",
+      cta: "Shop art prints",
+    },
+  },
+  {
+    label: "Manga",
+    columns: [
+      {
+        heading: "Shop by type",
+        links: ["Volumes", "Box sets", "Light novels", "Artbooks"],
+      },
+      {
+        heading: "Genres",
+        links: ["Action", "Fantasy", "Romance", "Sci-fi", "Slice of life"],
+      },
+      {
+        heading: "Browse",
+        links: ["Best sellers", "New arrivals", "Staff picks"],
+      },
+      {
+        heading: "Format",
+        links: ["Physical", "Digital", "Bundle", "Subscription"],
+      },
+    ],
+    promo: {
+      title: "Reader Picks",
+      copy: "Staff-recommended reads.",
+      cta: "Shop manga",
+    },
+  },
+  {
+    label: "Accessories",
+    columns: [
+      {
+        heading: "Shop by type",
+        links: ["Bags", "Pins & badges", "Keychains", "Phone cases", "Plushies"],
+      },
+      {
+        heading: "Browse",
+        links: ["Best sellers", "New arrivals", "Under $20"],
+      },
+      {
+        heading: "Shop by price",
+        links: ["Under $10", "$10 – $25", "$25 – $50", "$50+"],
+      },
+      {
+        heading: "Gift ideas",
+        links: ["For him", "For her", "Under $20", "Stocking stuffers"],
+      },
+    ],
+    promo: {
+      title: "Desk & Bag Kit",
+      copy: "Small collectibles, big personality.",
+      cta: "Shop accessories",
+    },
+  },
+  {
+    label: "Sale",
+    columns: [
+      {
+        heading: "Shop the sale",
+        links: ["Clearance", "Bundle deals", "Last chance", "Restocked & reduced"],
+      },
+      {
+        heading: "Browse",
+        links: ["Figures", "Apparel", "Art prints", "Manga"],
+      },
+      {
+        heading: "Discount level",
+        links: ["10% off", "25% off", "40% off", "Clearance"],
+      },
+      {
+        heading: "Timing",
+        links: ["Ending soon", "Just added", "Final markdowns"],
+      },
+    ],
+    promo: {
+      title: "Up To 40% Off",
+      copy: "While stock lasts.",
+      cta: "Shop the sale",
+    },
+  },
+];
+
+const THEME_CYCLE_EXPR =
+  "theme = theme === 'dark' ? 'light' : theme === 'light' ? 'dim' : 'dark'; document.documentElement.dataset.theme = theme";
+
+const FADE_TRANSITION = {
+  "x-transition:enter": "transition ease-out duration-200",
+  "x-transition:enter-start": "opacity-0",
+  "x-transition:enter-end": "opacity-100",
+  "x-transition:leave": "transition ease-in duration-150",
+  "x-transition:leave-start": "opacity-100",
+  "x-transition:leave-end": "opacity-0",
+};
+
+const FADE_SLIDE_TRANSITION = {
+  "x-transition:enter": "transition ease-out duration-200",
+  "x-transition:enter-start": "opacity-0 -translate-y-1",
+  "x-transition:enter-end": "opacity-100 translate-y-0",
+  "x-transition:leave": "transition ease-in duration-150",
+  "x-transition:leave-start": "opacity-100 translate-y-0",
+  "x-transition:leave-end": "opacity-0 -translate-y-1",
+};
+
+export default function Header() {
+  return (
+    <header
+      className="border-border-subtle/10 bg-surface/90 sticky top-0 z-50 border-b backdrop-blur-md"
+      x-data="{ mobileOpen: false, theme: 'dark', openCategory: null }"
+      x-init="theme = document.documentElement.dataset.theme"
+    >
+      <AnnouncementBar />
+
+      <div className="relative" {...{ "x-on:mouseleave": "openCategory = null" }}>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-xl py-md">
+          <a
+            href="/"
+            className="from-gradient-start to-gradient-end bg-gradient-to-r bg-clip-text text-lg font-bold tracking-tight text-transparent"
+          >
+            Inkwake
+          </a>
+
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-lg">
+              {MEGA_CATEGORIES.map((category) => (
+                <li key={category.label}>
+                  <button
+                    type="button"
+                    className="text-muted hover:text-accent py-sm text-sm whitespace-nowrap transition-colors duration-200"
+                    suppressHydrationWarning
+                    {...{
+                      "x-on:mouseenter": `openCategory = '${category.label}'`,
+                      ":class": `{ 'text-accent': openCategory === '${category.label}' }`,
+                    }}
+                  >
+                    {category.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-lg">
+            <button
+              type="button"
+              aria-label="Cycle colour theme"
+              className="border-border-subtle/20 text-muted hover:text-heading hidden rounded-full border px-md py-xs text-xs tracking-wide capitalize md:inline-block"
+              x-text="theme"
+              suppressHydrationWarning
+              {...{ "x-on:click": THEME_CYCLE_EXPR }}
+            >
+              dark
+            </button>
+
+            <button type="button" aria-label="Search" className="text-muted hover:text-accent hidden md:inline-flex">
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+              </svg>
+            </button>
+
+            <button type="button" aria-label="Account" className="text-muted hover:text-accent hidden md:inline-flex">
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" strokeLinecap="round" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              aria-label="Cart, 0 items"
+              className="text-muted hover:text-accent relative hidden md:inline-flex"
+            >
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
+                <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
+              </svg>
+              <span className="bg-accent absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full text-xs text-white">
+                0
+              </span>
+            </button>
+
+            <button
+              type="button"
+              aria-label="Toggle navigation menu"
+              className="flex flex-col gap-xs lg:hidden"
+              {...{ "x-on:click": "mobileOpen = !mobileOpen" }}
+            >
+              <span className="bg-heading block h-px w-6"></span>
+              <span className="bg-heading block h-px w-6"></span>
+              <span className="bg-heading block h-px w-6"></span>
+            </button>
+          </div>
+        </div>
+
+        <div
+          className="border-border-subtle/10 bg-surface absolute inset-x-0 top-full hidden border-t md:block"
+          x-show="openCategory !== null"
+          suppressHydrationWarning
+          {...FADE_SLIDE_TRANSITION}
+        >
+          <div className="mx-auto w-full max-w-6xl px-xl py-3xl">
+            {MEGA_CATEGORIES.map((category) => (
+              <div
+                key={category.label}
+                className="grid grid-cols-[1fr_1fr_1fr_1fr_1.2fr] gap-2xl"
+                x-show={`openCategory === '${category.label}'`}
+                suppressHydrationWarning
+                {...FADE_TRANSITION}
+              >
+                {category.columns.map((column) => (
+                  <div key={column.heading} className="flex flex-col gap-md">
+                    <span className="text-heading text-sm font-bold">{column.heading}</span>
+                    <ul className="flex flex-col gap-sm">
+                      {column.links.map((link) => (
+                        <li key={link}>
+                          <a
+                            href="#"
+                            className="text-muted hover:text-accent text-sm whitespace-nowrap transition-colors duration-200"
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+
+                <div className="from-gradient-start to-gradient-end flex flex-col justify-between gap-lg rounded-md bg-gradient-to-br p-xl">
+                  <div className="flex flex-col gap-xs">
+                    <span className="text-sm font-bold text-white">{category.promo.title}</span>
+                    <p className="text-sm text-white/80">{category.promo.copy}</p>
+                  </div>
+                  <a
+                    href="#"
+                    className="text-sm font-bold text-white underline underline-offset-4"
+                  >
+                    {category.promo.cta}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <nav
+        aria-label="Mobile"
+        className="border-border-subtle/10 bg-surface max-h-[80dvh] overflow-y-auto border-t lg:hidden"
+        x-show="mobileOpen"
+        suppressHydrationWarning
+        {...FADE_SLIDE_TRANSITION}
+      >
+        <div className="divide-border-subtle/10 flex flex-col divide-y px-xl">
+          {MEGA_CATEGORIES.map((category) => (
+            <div key={category.label} className="py-lg" x-data="{ open: false }">
+              <button
+                type="button"
+                className="text-heading flex w-full items-center justify-between text-base font-bold"
+                {...{ "x-on:click": "open = !open" }}
+              >
+                {category.label}
+                <svg
+                  aria-hidden="true"
+                  className="h-4 w-4 transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  suppressHydrationWarning
+                  {...{ ":class": "{ 'rotate-180': open }" }}
+                >
+                  <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              <div
+                className="flex flex-col gap-md pt-lg"
+                x-show="open"
+                suppressHydrationWarning
+                {...FADE_TRANSITION}
+              >
+                {category.columns.map((column) => (
+                  <div
+                    key={column.heading}
+                    className="border-border-subtle/10 border-l pl-md"
+                    x-data="{ subOpen: false }"
+                  >
+                    <button
+                      type="button"
+                      className="text-muted flex w-full items-center justify-between py-xs text-xs font-bold tracking-wide uppercase"
+                      {...{ "x-on:click": "subOpen = !subOpen" }}
+                    >
+                      {column.heading}
+                      <svg
+                        aria-hidden="true"
+                        className="h-3 w-3 transition-transform duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        suppressHydrationWarning
+                        {...{ ":class": "{ 'rotate-180': subOpen }" }}
+                      >
+                        <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+
+                    <div
+                      className="grid grid-cols-2 gap-x-md gap-y-sm pt-sm pb-sm"
+                      x-show="subOpen"
+                      suppressHydrationWarning
+                      {...FADE_TRANSITION}
+                    >
+                      {column.links.map((link) => (
+                        <a
+                          key={link}
+                          href="#"
+                          className="text-muted hover:text-accent text-sm transition-colors duration-200"
+                        >
+                          {link}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-border-subtle/10 flex items-center justify-between gap-lg border-t px-xl py-lg">
+          <div className="flex items-center gap-lg">
+            <button type="button" aria-label="Search" className="text-muted hover:text-accent">
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+              </svg>
+            </button>
+            <button type="button" aria-label="Account" className="text-muted hover:text-accent">
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" strokeLinecap="round" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-label="Cart, 0 items"
+              className="text-muted hover:text-accent relative"
+            >
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
+                <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
+              </svg>
+              <span className="bg-accent absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full text-xs text-white">
+                0
+              </span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Cycle colour theme"
+            className="border-border-subtle/20 text-muted rounded-full border px-lg py-xs text-sm capitalize"
+            x-text="theme"
+            suppressHydrationWarning
+            {...{ "x-on:click": THEME_CYCLE_EXPR }}
+          >
+            dark
+          </button>
+        </div>
+      </nav>
+    </header>
+  );
+}
