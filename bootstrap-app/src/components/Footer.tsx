@@ -18,7 +18,7 @@ const PAYMENT_METHODS = ["Visa", "Mastercard", "Amex", "PayPal", "Apple Pay", "G
 export default function Footer() {
   return (
     <footer className="iw-footer border-top">
-      <div className="iw-footer-outer d-flex flex-column gap-5">
+      <div className="iw-container iw-footer-outer d-flex flex-column gap-5">
         <div className="d-flex flex-column gap-3">
           <span className="iw-footer-brand iw-brand-gradient fw-bold">Inkwake</span>
           <p className="iw-nav-link mb-0">

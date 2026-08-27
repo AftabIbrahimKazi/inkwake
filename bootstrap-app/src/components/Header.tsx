@@ -82,11 +82,11 @@ export default function Header() {
           it) down to this wrapper's own ~76px height instead of the
           viewport. Same latent bug existed in tailwind-app/strata-app's
           headers — fixed there too. */}
-      <div className="iw-cart-badge">
+      <div className="iw-header">
         <AnnouncementBar />
 
       <nav className="navbar navbar-expand-lg iw-header-bar">
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="iw-container d-flex align-items-center justify-content-between">
           <a href="/" className="iw-brand-gradient navbar-brand fw-bold">
             Inkwake
           </a>
@@ -105,7 +105,7 @@ export default function Header() {
                 </button>
 
                 <div className="iw-mega-panel dropdown-menu w-100">
-                  <div className="iw-nav-link">
+                  <div className="iw-container">
                     <div className="row g-4 py-4">
                       {category.columns.map((column) => (
                         <div key={column.heading} className="col">
