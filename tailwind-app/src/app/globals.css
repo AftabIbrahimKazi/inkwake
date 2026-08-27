@@ -23,6 +23,12 @@
   --space-4xl: 64px;
   --space-5xl: 96px;
 
+  /* RULE 07 gap: project has no fixed-size scale token file yet (flagged,
+     not invented) — this single-purpose var is the minimal token-compliant
+     stand-in for the mobile-nav drawer width, shared verbatim (320px)
+     across all three apps so the unified drawer mechanism is truly 1:1:1. */
+  --iw-size-drawer: 320px;
+
   /* Colour palette (raw values) */
   --color-black: #000000;
   --color-white: #ffffff;
@@ -88,7 +94,6 @@
   --color-gradient-start: var(--color-brand-gradient-start);
   --color-gradient-end: var(--color-brand-gradient-end);
   --font-sans: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
-  --font-mono: var(--font-geist-mono);
 
   /* Alias shared type/spacing tokens into Tailwind's own scale keys */
   --text-xs: var(--font-size-xs);

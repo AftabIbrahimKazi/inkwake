@@ -7,11 +7,11 @@ const ANNOUNCEMENTS = [
 
 export default function AnnouncementBar() {
   return (
-    <div className="iw-announcement-bar">
+    <div className="iw-brand-gradient bg-[linear-gradient(to_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] py-[var(--space-xs)]">
       <div className="iw-marquee">
         <div className="iw-marquee-track d-flex gap-5" aria-hidden="true">
           {[...ANNOUNCEMENTS, ...ANNOUNCEMENTS].map((message, index) => (
-            <span key={index} className="iw-announcement-text text-nowrap">
+            <span key={index} className="text-white fs-[var(--font-size-xs)] fw-bold text-nowrap">
               {message}
             </span>
           ))}

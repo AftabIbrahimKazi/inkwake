@@ -180,16 +180,50 @@ const FADE_SLIDE_TRANSITION = {
   "x-transition:leave-end": "opacity-0 -translate-y-1",
 };
 
+// Mobile nav mechanism is now unified across all three apps as a fixed,
+// right-anchored slide-in drawer with a backdrop (bootstrap-app's native
+// .offcanvas and strata-app's hand-rolled fixed panel already used this
+// shape; tailwind-app previously used an inline in-flow dropdown instead —
+// changed here to match). Timings match bootstrap-app's Bootstrap-default
+// offcanvas transform transition (300ms both directions) and its backdrop
+// fade, so the same open/close feel applies everywhere.
+const DRAWER_TRANSITION = {
+  "x-transition:enter": "transition ease-in-out duration-300",
+  "x-transition:enter-start": "translate-x-full",
+  "x-transition:enter-end": "translate-x-0",
+  "x-transition:leave": "transition ease-in-out duration-300",
+  "x-transition:leave-start": "translate-x-0",
+  "x-transition:leave-end": "translate-x-full",
+};
+
+const BACKDROP_TRANSITION = {
+  "x-transition:enter": "transition ease-linear duration-300",
+  "x-transition:enter-start": "opacity-0",
+  "x-transition:enter-end": "opacity-100",
+  "x-transition:leave": "transition ease-linear duration-300",
+  "x-transition:leave-start": "opacity-100",
+  "x-transition:leave-end": "opacity-0",
+};
+
 export default function Header() {
   return (
     <header
-      className="border-border-subtle/10 bg-surface/90 sticky top-0 z-50 border-b backdrop-blur-md"
+      className="sticky top-0 z-50"
       x-data="{ mobileOpen: false, theme: 'dark', openCategory: null }"
       x-init="theme = document.documentElement.dataset.theme"
     >
-      <AnnouncementBar />
+      {/* backdrop-blur lives on this inner wrapper, not the <header> root —
+          filter/backdrop-filter establishes a new containing block for any
+          `position: fixed` descendant (CSS spec), which was silently
+          collapsing the mobile drawer/backdrop below (also fixed, but
+          siblings of this wrapper, not descendants of it) down to this
+          wrapper's own ~76px height instead of the viewport. Same latent
+          bug existed in bootstrap-app/strata-app's headers — fixed there
+          too. */}
+      <div className="border-border-subtle/10 bg-surface/90 border-b backdrop-blur-md">
+        <AnnouncementBar />
 
-      <div className="relative" {...{ "x-on:mouseleave": "openCategory = null" }}>
+        <div className="relative" {...{ "x-on:mouseleave.debounce.150ms": "openCategory = null" }}>
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-xl py-md">
           <a
             href="/"
@@ -298,11 +332,28 @@ export default function Header() {
           suppressHydrationWarning
           {...FADE_SLIDE_TRANSITION}
         >
-          <div className="mx-auto w-full max-w-6xl px-xl py-3xl">
+          <div className="mx-auto grid w-full max-w-6xl px-xl py-3xl">
             {MEGA_CATEGORIES.map((category) => (
+              // Every category sits in the SAME grid cell (grid-area 1/1) —
+              // the standard CSS-only crossfade-stack technique. Previously
+              // each used x-show in normal block flow, so switching ran one
+              // leave-transition and one enter-transition concurrently, and
+              // with both still taking up flow space, that was a visible
+              // jump/double layout, not a clean crossfade. Plain `absolute
+              // inset-0` was tried instead of grid-stacking, but absolutely
+              // positioned children don't contribute to their parent's
+              // height, collapsing the wrapper to zero — grid-stacking still
+              // sizes the container to the tallest overlapping child.
+              // (A <template x-if> per-category approach was tried before
+              // that and reverted: Alpine's x-if relies on the browser HTML
+              // parser routing children into <template>.content, which only
+              // happens when parsing static markup — React builds the DOM
+              // via appendChild, which does NOT get that special routing,
+              // so the div rendered as a normal, non-inert child instead
+              // and caused a hydration mismatch.)
               <div
                 key={category.label}
-                className="grid grid-cols-[1fr_1fr_1fr_1fr_1.2fr] gap-2xl"
+                className="col-start-1 row-start-1 grid grid-cols-[1fr_1fr_1fr_1fr_1.2fr] gap-2xl"
                 x-show={`openCategory === '${category.label}'`}
                 suppressHydrationWarning
                 {...FADE_TRANSITION}
@@ -341,15 +392,40 @@ export default function Header() {
             ))}
           </div>
         </div>
+        </div>
       </div>
+
+      <div
+        className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+        x-show="mobileOpen"
+        suppressHydrationWarning
+        {...{ "x-on:click": "mobileOpen = false" }}
+        {...BACKDROP_TRANSITION}
+      ></div>
 
       <nav
         aria-label="Mobile"
-        className="border-border-subtle/10 bg-surface max-h-[80dvh] overflow-y-auto border-t lg:hidden"
+        className="border-border-subtle/10 bg-surface fixed inset-y-0 right-0 z-50 flex w-[var(--iw-size-drawer)] flex-col overflow-y-auto border-l lg:hidden"
         x-show="mobileOpen"
         suppressHydrationWarning
-        {...FADE_SLIDE_TRANSITION}
+        {...DRAWER_TRANSITION}
       >
+        <div className="border-border-subtle/10 flex items-center justify-between gap-lg border-b px-xl py-lg">
+          <span className="from-gradient-start to-gradient-end bg-gradient-to-r bg-clip-text text-lg font-bold tracking-tight text-transparent">
+            Inkwake
+          </span>
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            className="text-muted hover:text-accent"
+            {...{ "x-on:click": "mobileOpen = false" }}
+          >
+            <svg aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
         <div className="divide-border-subtle/10 flex flex-col divide-y px-xl">
           {MEGA_CATEGORIES.map((category) => (
             <div key={category.label} className="py-lg" x-data="{ open: false }">

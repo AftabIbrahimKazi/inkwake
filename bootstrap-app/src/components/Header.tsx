@@ -73,29 +73,39 @@ function IconButton({ label, children }: { label: string; children: React.ReactN
 
 export default function Header() {
   return (
-    <header className="sticky-top bg-body border-bottom">
-      <AnnouncementBar />
+    <header className="sticky-top">
+      {/* .iw-header's backdrop-filter lives on this inner wrapper, not the
+          <header> root — filter/backdrop-filter establishes a new
+          containing block for any position:fixed descendant (CSS spec),
+          which was silently collapsing the offcanvas mobile drawer (also
+          fixed, but a sibling of this wrapper below, not a descendant of
+          it) down to this wrapper's own ~76px height instead of the
+          viewport. Same latent bug existed in tailwind-app/strata-app's
+          headers — fixed there too. */}
+      <div className="iw-cart-badge">
+        <AnnouncementBar />
 
-      <nav className="navbar navbar-expand-lg py-3">
-        <div className="container">
-          <a href="/" className="navbar-brand iw-brand-gradient fw-bold">
+      <nav className="navbar navbar-expand-lg iw-header-bar">
+        <div className="d-flex align-items-center justify-content-between">
+          <a href="/" className="iw-brand-gradient navbar-brand fw-bold">
             Inkwake
           </a>
 
-          <ul className="navbar-nav d-none d-lg-flex flex-row gap-4 mx-auto">
+          <ul className="navbar-nav d-none d-lg-flex flex-row gap-3 mx-auto">
             {MEGA_CATEGORIES.map((category) => (
               <li key={category.label} className="nav-item dropdown position-static">
                 <button
                   type="button"
-                  className="nav-link dropdown-toggle iw-nav-link btn btn-link"
+                  className="iw-nav-link nav-link dropdown-toggle btn btn-link"
                   data-bs-toggle="dropdown"
+                  data-bs-display="static"
                   aria-expanded="false"
                 >
                   {category.label}
                 </button>
 
-                <div className="dropdown-menu w-100 iw-mega-panel">
-                  <div className="container">
+                <div className="iw-mega-panel dropdown-menu w-100">
+                  <div className="iw-nav-link">
                     <div className="row g-4 py-4">
                       {category.columns.map((column) => (
                         <div key={column.heading} className="col">
@@ -103,7 +113,7 @@ export default function Header() {
                           <ul className="list-unstyled d-flex flex-column gap-2">
                             {column.links.map((link) => (
                               <li key={link}>
-                                <a href="#" className="dropdown-item iw-nav-link p-0">
+                                <a href="#" className="iw-nav-link dropdown-item p-0">
                                   {link}
                                 </a>
                               </li>
@@ -129,7 +139,17 @@ export default function Header() {
             ))}
           </ul>
 
-          <div className="d-none d-md-flex align-items-center gap-4">
+          {/* Shared shell: border/background/entrance-exit transition live
+              here, not on each .dropdown-menu — it shows/hides once for
+              "is any category open", so switching categories never re-fades
+              the border the way each panel carrying its own border would.
+              Matches tailwind-app's split between the outer wrapper (fades
+              once) and each category's inner content (crossfades inside
+              it). Sits behind the actual .dropdown-menu panels (z-index),
+              which now carry only content, not border/bg. */}
+          <div className="iw-mega-shell" id="iwMegaShell" suppressHydrationWarning />
+
+          <div className="d-none d-md-flex align-items-center gap-3">
             <button type="button" data-theme-toggle aria-label="Cycle colour theme" className="iw-theme-toggle btn">
               dark
             </button>
@@ -159,32 +179,39 @@ export default function Header() {
 
           <button
             type="button"
-            className="navbar-toggler border-0 p-0 d-lg-none"
+            className="iw-navbar-toggler navbar-toggler border-0 p-0 d-flex flex-column gap-1 d-lg-none"
             data-bs-toggle="offcanvas"
             data-bs-target="#iwMobileNav"
             aria-controls="iwMobileNav"
             aria-label="Toggle navigation menu"
           >
-            <span className="navbar-toggler-icon"></span>
+            <span className="iw-toggler-bar d-block"></span>
+            <span className="iw-toggler-bar d-block"></span>
+            <span className="iw-toggler-bar d-block"></span>
           </button>
         </div>
       </nav>
+      </div>
 
-      <div className="offcanvas offcanvas-end iw-offcanvas" tabIndex={-1} id="iwMobileNav" aria-labelledby="iwMobileNavLabel">
+      <div className="iw-offcanvas offcanvas offcanvas-end" tabIndex={-1} id="iwMobileNav" aria-labelledby="iwMobileNavLabel">
         <div className="offcanvas-header border-bottom">
-          <h2 className="offcanvas-title iw-brand-gradient fw-bold" id="iwMobileNavLabel">
+          <h2 className="iw-brand-gradient offcanvas-title fw-bold" id="iwMobileNavLabel">
             Inkwake
           </h2>
-          <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <button type="button" className="btn btn-link p-0" data-bs-dismiss="offcanvas" aria-label="Close navigation menu">
+            <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
 
         <div className="offcanvas-body d-flex flex-column">
-          <div className="accordion iw-accordion" id="iwMobileCategories">
+          <div className="iw-accordion accordion" id="iwMobileCategories">
             {MEGA_CATEGORIES.map((category, i) => (
               <div key={category.label} className="accordion-item">
                 <h3 className="accordion-header">
                   <button
-                    className="accordion-button collapsed iw-accordion-button"
+                    className="iw-accordion-button-sm accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target={`#iwCat${i}`}
@@ -194,12 +221,12 @@ export default function Header() {
                 </h3>
                 <div id={`iwCat${i}`} className="accordion-collapse collapse" data-bs-parent="#iwMobileCategories">
                   <div className="accordion-body">
-                    <div className="accordion iw-accordion iw-accordion-nested" id={`iwSub${i}`}>
+                    <div className="iw-accordion iw-accordion-nested accordion" id={`iwSub${i}`}>
                       {category.columns.map((column, j) => (
                         <div key={column.heading} className="accordion-item">
                           <h4 className="accordion-header">
                             <button
-                              className="accordion-button collapsed iw-accordion-button iw-accordion-button-sm"
+                              className="accordion-button collapsed"
                               type="button"
                               data-bs-toggle="collapse"
                               data-bs-target={`#iwSub${i}-${j}`}

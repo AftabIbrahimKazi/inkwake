@@ -65,7 +65,7 @@ const MEGA_CATEGORIES = [
 
 function IconButton({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <button type="button" aria-label={label} className="iw-icon-btn d-flex bg-[transparent] border-[none] p-0">
+    <button type="button" aria-label={label} className="iw-icon-btn text-muted transition d-flex bg-[transparent] border-[none] p-0">
       {children}
     </button>
   );
@@ -73,21 +73,32 @@ function IconButton({ label, children }: { label: string; children: React.ReactN
 
 export default function Header() {
   return (
-    <header className="position-sticky top-0 z-[50] bg-[var(--color-bg-surface)] border-bottom-[1px_solid_var(--color-line-subtle)]">
-      <AnnouncementBar />
+    <header className="position-sticky top-0 z-[50]">
+      {/* .iw-header's backdrop-filter lives on this inner wrapper, not the
+          <header> root — filter/backdrop-filter establishes a new
+          containing block for any position:fixed descendant (CSS spec),
+          which was silently collapsing the mobile drawer/backdrop below
+          (also fixed, but siblings of this wrapper, not descendants of it)
+          down to this wrapper's own ~76px height instead of the viewport.
+          Same latent bug existed in tailwind-app/bootstrap-app's headers —
+          fixed there too. The mega-menu shell/panels stay inside this
+          wrapper: they're position:absolute, not fixed, so they're
+          unaffected and should stay positioned relative to the header. */}
+      <div className="iw-header bg-[color-mix(in_srgb,var(--color-bg-surface)_90%,transparent)] border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)]">
+        <AnnouncementBar />
 
-      <div className="d-flex align-items-center justify-content-between p-3" data-hover-group>
-        <a href="/" className="iw-brand-gradient fw-bold fs-[var(--font-size-lg)]">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex align-items-center justify-content-between pt-[var(--space-md)] pb-[var(--space-md)]" data-hover-group>
+        <a href="/" className="iw-brand-gradient bg-[linear-gradient(to_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] fw-bold fs-[var(--font-size-lg)]">
           Inkwake
         </a>
 
         <nav aria-label="Primary" className="d-none d-lg-block">
-          <ul className="d-flex align-items-center gap-4 list-unstyled">
+          <ul className="d-flex align-items-center gap-3 list-unstyled">
             {MEGA_CATEGORIES.map((category, i) => (
               <li key={category.label}>
                 <button
                   type="button"
-                  className="iw-nav-link bg-[transparent] border-[none] p-0 fs-[var(--font-size-sm)]"
+                  className="iw-nav-link text-muted transition bg-[transparent] border-[none] px-0 pt-[var(--space-sm)] pb-[var(--space-sm)] fs-[var(--font-size-sm)]"
                   data-hover-target={`#strataMega${i}`}
                 >
                   {category.label}
@@ -97,8 +108,13 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="d-none d-md-flex align-items-center gap-4">
-          <button type="button" data-theme-toggle aria-label="Cycle colour theme" className="iw-theme-toggle">
+        <div className="d-none d-md-flex align-items-center gap-3">
+          <button
+            type="button"
+            data-theme-toggle
+            aria-label="Cycle colour theme"
+            className="iw-theme-toggle iw-pill text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)]"
+          >
             dark
           </button>
 
@@ -116,12 +132,14 @@ export default function Header() {
             </svg>
           </IconButton>
 
-          <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn position-relative bg-[transparent] border-[none] p-0">
+          <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn text-muted transition position-relative bg-[transparent] border-[none] p-0">
             <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
               <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
             </svg>
-            <span className="iw-cart-badge">0</span>
+            <span className="d-flex align-items-center justify-content-center position-absolute rounded-circle bg-primary text-white fs-[var(--font-size-xs)] h-[var(--space-lg)] w-[var(--space-lg)] top-[calc(var(--space-sm)*-1)] right-[calc(var(--space-sm)*-1)]">
+              0
+            </span>
           </button>
         </div>
 
@@ -138,22 +156,36 @@ export default function Header() {
         </button>
       </div>
 
+      {/* Shared shell: border/background/entrance-exit transition live here,
+          not on each category panel — it shows/hides once for "is any
+          category open" (driven from interactions.js), so switching
+          categories never re-fades the border the way each panel carrying
+          its own border/bg would. Matches tailwind-app's split between the
+          outer wrapper (fades once) and each category's inner content
+          (crossfades inside it). Sits behind the actual panels (z-index). */}
+      <div
+        id="iwMegaShell"
+        data-st-visible="false"
+        suppressHydrationWarning
+        className="iw-mega-shell position-absolute start-0 end-0 top-100 d-none d-md-block border-top-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] bg-[var(--color-bg-surface)]"
+      />
+
       {MEGA_CATEGORIES.map((category, i) => (
         <div
           key={category.label}
           id={`strataMega${i}`}
           data-st-visible="false"
-          className="position-absolute start-0 end-0 top-100 d-none d-md-block border-top-[1px_solid_var(--color-line-subtle)] bg-[var(--color-bg-surface)]"
+          className="iw-mega-panel position-absolute start-0 end-0 top-100 d-none d-md-block"
         >
-          <div className="p-4">
+          <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] py-[var(--space-3xl)]">
             <div className="d-grid gap-4 gtc-[1fr_1fr_1fr_1fr_1.2fr]">
               {category.columns.map((column) => (
                 <div key={column.heading} className="d-flex flex-column gap-2">
-                  <span className="iw-column-heading fw-bold fs-[var(--font-size-sm)]">{column.heading}</span>
+                  <span className="iw-column-heading text-body fw-bold fs-[var(--font-size-sm)]">{column.heading}</span>
                   <ul className="d-flex flex-column gap-2 list-unstyled">
                     {column.links.map((link) => (
                       <li key={link}>
-                        <a href="#" className="iw-nav-link fs-[var(--font-size-sm)] text-nowrap">
+                        <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] text-nowrap">
                           {link}
                         </a>
                       </li>
@@ -161,12 +193,12 @@ export default function Header() {
                   </ul>
                 </div>
               ))}
-              <div className="iw-promo-panel d-flex flex-column justify-content-between gap-3 rounded p-4">
+              <div className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] d-flex flex-column justify-content-between gap-3 rounded p-4">
                 <div>
-                  <div className="fw-bold text-[var(--color-white)] fs-[var(--font-size-sm)]">{category.promo.title}</div>
-                  <p className="text-[var(--color-white)] fs-[var(--font-size-sm)]">{category.promo.copy}</p>
+                  <div className="fw-bold text-white fs-[var(--font-size-sm)]">{category.promo.title}</div>
+                  <p className="text-white fs-[var(--font-size-sm)]">{category.promo.copy}</p>
                 </div>
-                <a href="#" className="fw-bold text-[var(--color-white)] fs-[var(--font-size-sm)] text-decoration-underline">
+                <a href="#" className="fw-bold text-white fs-[var(--font-size-sm)] text-decoration-underline">
                   {category.promo.cta}
                 </a>
               </div>
@@ -174,18 +206,31 @@ export default function Header() {
           </div>
         </div>
       ))}
+      </div>
+
+      {/* Backdrop reuses the same generic [data-toggle-target] click
+          handler as the close button (interactions.js) — clicking it while
+          the drawer is open always closes (toggling an already-open value),
+          so no extra JS is needed. Matches bootstrap-app's native .offcanvas
+          backdrop and tailwind-app's Alpine backdrop. */}
+      <div
+        data-st-visible="false"
+        data-toggle-target="#strataMobileNav"
+        data-toggle-attr="visible"
+        className="iw-mobile-backdrop position-fixed inset-0 z-[55] d-lg-none bg-[var(--color-black)]"
+      />
 
       <div
         id="strataMobileNav"
         data-st-visible="false"
-        className="position-fixed top-0 end-0 bottom-0 z-[60] w-[320px] d-flex d-lg-none flex-column bg-[var(--color-bg-surface)] border-[1px_solid_var(--color-line-subtle)] overflow-[hidden] p-4"
+        className="iw-mobile-drawer position-fixed top-0 end-0 bottom-0 z-[60] w-[var(--iw-size-drawer)] d-flex d-lg-none flex-column bg-[var(--color-bg-surface)] border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] overflow-[hidden] p-4"
       >
-        <div className="d-flex align-items-center justify-content-between border-bottom-[1px_solid_var(--color-line-subtle)] pb-3 mb-3">
-          <span className="iw-brand-gradient fw-bold fs-[var(--font-size-lg)]">Inkwake</span>
+        <div className="d-flex align-items-center justify-content-between border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] pb-3 mb-3">
+          <span className="iw-brand-gradient bg-[linear-gradient(to_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] fw-bold fs-[var(--font-size-lg)]">Inkwake</span>
           <button
             type="button"
             aria-label="Close navigation menu"
-            className="iw-icon-btn bg-[transparent] border-[none] p-0"
+            className="iw-icon-btn text-muted transition bg-[transparent] border-[none] p-0"
             data-toggle-target="#strataMobileNav"
             data-toggle-attr="visible"
           >
@@ -197,16 +242,16 @@ export default function Header() {
 
         <div className="d-flex flex-column overflow-[auto]">
           {MEGA_CATEGORIES.map((category, i) => (
-            <div key={category.label} className="border-bottom-[1px_solid_var(--color-line-subtle)] py-3">
+            <div key={category.label} className="border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] py-3">
               <button
                 type="button"
-                className="iw-nav-heading d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-md)]"
+                className="iw-nav-link text-body d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-md)]"
                 data-toggle-target={`#strataMobileCat${i}`}
                 data-toggle-attr="collapsed"
                 aria-expanded="false"
               >
                 {category.label}
-                <svg aria-hidden="true" className="iw-chevron" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="iw-chevron transition" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
@@ -215,13 +260,13 @@ export default function Header() {
                   <div key={column.heading}>
                     <button
                       type="button"
-                      className="iw-nav-link d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-xs)] text-uppercase"
+                      className="iw-nav-heading text-muted transition d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-xs)] text-uppercase"
                       data-toggle-target={`#strataMobileSub${i}-${j}`}
                       data-toggle-attr="collapsed"
                       aria-expanded="false"
                     >
                       {column.heading}
-                      <svg aria-hidden="true" className="iw-chevron" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg aria-hidden="true" className="iw-chevron transition" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
@@ -231,7 +276,7 @@ export default function Header() {
                       className="d-grid gap-2 pt-2 gtc-[1fr_1fr]"
                     >
                       {column.links.map((link) => (
-                        <a key={link} href="#" className="iw-nav-link fs-[var(--font-size-sm)]">
+                        <a key={link} href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)]">
                           {link}
                         </a>
                       ))}
@@ -243,7 +288,7 @@ export default function Header() {
           ))}
         </div>
 
-        <div className="d-flex align-items-center justify-content-between border-top-[1px_solid_var(--color-line-subtle)] pt-3 mt-3">
+        <div className="d-flex align-items-center justify-content-between border-top-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] pt-3 mt-3">
           <div className="d-flex align-items-center gap-4">
             <IconButton label="Search">
               <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -257,16 +302,23 @@ export default function Header() {
                 <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" strokeLinecap="round" />
               </svg>
             </IconButton>
-            <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn position-relative bg-[transparent] border-[none] p-0">
+            <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn text-muted transition position-relative bg-[transparent] border-[none] p-0">
               <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
                 <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
               </svg>
-              <span className="iw-cart-badge">0</span>
+              <span className="d-flex align-items-center justify-content-center position-absolute rounded-circle bg-primary text-white fs-[var(--font-size-xs)] h-[var(--space-lg)] w-[var(--space-lg)] top-[calc(var(--space-sm)*-1)] right-[calc(var(--space-sm)*-1)]">
+                0
+              </span>
             </button>
           </div>
 
-          <button type="button" data-theme-toggle aria-label="Cycle colour theme" className="iw-theme-toggle">
+          <button
+            type="button"
+            data-theme-toggle
+            aria-label="Cycle colour theme"
+            className="iw-theme-toggle text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)]"
+          >
             dark
           </button>
         </div>

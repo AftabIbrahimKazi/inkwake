@@ -18,48 +18,44 @@ const PAYMENT_METHODS = ["Visa", "Mastercard", "Amex", "PayPal", "Apple Pay", "G
 export default function Footer() {
   return (
     <footer className="iw-footer border-top">
-      <div className="container py-5 d-flex flex-column gap-5">
-        <div className="row g-4">
-          <div className="col-md-5">
-            <div className="d-flex flex-column gap-3">
-              <span className="iw-brand-gradient fw-bold fs-5">Inkwake</span>
-              <p className="iw-nav-link mb-0">
-                Original anime-inspired figures, apparel, art prints, and manga. Self-generated art only — no
-                third-party IP.
-              </p>
+      <div className="iw-footer-outer d-flex flex-column gap-5">
+        <div className="d-flex flex-column gap-3">
+          <span className="iw-footer-brand iw-brand-gradient fw-bold">Inkwake</span>
+          <p className="iw-nav-link mb-0">
+            Original anime-inspired figures, apparel, art prints, and manga. Self-generated art only — no
+            third-party IP.
+          </p>
 
-              <form className="d-flex flex-column gap-2">
-                <label htmlFor="footer-newsletter-email" className="iw-column-heading fw-bold">
-                  Join the newsletter
-                </label>
-                <div className="d-flex gap-2">
-                  <input
-                    id="footer-newsletter-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="iw-newsletter-input form-control"
-                  />
-                  <button type="submit" className="iw-subscribe-btn btn text-nowrap">
-                    Subscribe
-                  </button>
-                </div>
-              </form>
+          <form className="iw-footer-newsletter d-flex flex-column gap-2">
+            <label htmlFor="footer-newsletter-email" className="iw-column-heading fw-bold">
+              Join the newsletter
+            </label>
+            <div className="d-flex gap-2">
+              <input
+                id="footer-newsletter-email"
+                type="email"
+                placeholder="you@example.com"
+                className="iw-newsletter-input form-control"
+              />
+              <button type="submit" className="iw-subscribe-btn btn text-nowrap">
+                Subscribe
+              </button>
             </div>
-          </div>
+          </form>
         </div>
 
-        <div className="row g-4 border-top border-bottom py-4">
+        <div className="iw-footer-badges d-grid border-top border-bottom">
           {TRUST_BADGES.map((badge) => (
-            <div key={badge} className="col-6 col-md-3 d-flex align-items-center gap-2">
+            <div key={badge} className="d-flex align-items-center gap-2">
               <span className="iw-badge-dot"></span>
               <span className="iw-nav-link">{badge}</span>
             </div>
           ))}
         </div>
 
-        <div className="row row-cols-2 row-cols-md-4 g-4">
+        <div className="iw-footer-columns d-grid">
           {FOOTER_COLUMNS.map((column) => (
-            <div key={column.heading} className="col d-flex flex-column gap-3">
+            <div key={column.heading} className="d-flex flex-column gap-3">
               <span className="iw-column-heading fw-bold">{column.heading}</span>
               <ul className="list-unstyled d-flex flex-column gap-2 mb-0">
                 {column.links.map((link) => (

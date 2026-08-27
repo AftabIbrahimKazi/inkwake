@@ -1,32 +1,45 @@
+import Hero from "@/components/sections/Hero";
+import PartnerLogos from "@/components/sections/PartnerLogos";
+import DashboardAnalytics from "@/components/sections/DashboardAnalytics";
+import FeatureTable from "@/components/sections/FeatureTable";
+import ProcessTrack from "@/components/sections/ProcessTrack";
+import PriceEstimator from "@/components/sections/PriceEstimator";
+import MediaWall from "@/components/sections/MediaWall";
+import VideoBox from "@/components/sections/VideoBox";
+import CanvasWorkspace from "@/components/sections/CanvasWorkspace";
+import EditorialGrid from "@/components/sections/EditorialGrid";
+import ReviewColumns from "@/components/sections/ReviewColumns";
+import TeamDirectory from "@/components/sections/TeamDirectory";
+import PricingMatrix from "@/components/sections/PricingMatrix";
+import FAQIndex from "@/components/sections/FAQIndex";
+import StatusDashboard from "@/components/sections/StatusDashboard";
+import IntakeSheet from "@/components/sections/IntakeSheet";
+import ResourceFeed from "@/components/sections/ResourceFeed";
+import ConversionPanel from "@/components/sections/ConversionPanel";
+import RegionalDirectory from "@/components/sections/RegionalDirectory";
+
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col">
-      <section className="bg-hero-bg relative flex h-screen w-full items-center justify-center overflow-hidden text-center">
-        <canvas
-          id="ink-canvas"
-          data-ink-cursor
-          className="pointer-events-auto absolute inset-0 h-full w-full"
-          suppressHydrationWarning
-        />
-        <div className="pointer-events-none relative z-10 flex flex-col items-center gap-4">
-          <h1 className="text-4xl font-bold text-heading">Inkwake</h1>
-          <p className="text-lg text-muted">
-            Step 2 — ink cursor prototype (Tailwind build)
-          </p>
-        </div>
-      </section>
-
-      <section className="bg-surface flex h-screen w-full items-center justify-center">
-        <p className="text-muted text-lg">
-          Placeholder section — proves scroll behaviour, not real content
-        </p>
-      </section>
-
-      <section className="bg-hero-bg flex h-screen w-full items-center justify-center">
-        <p className="text-muted text-lg">
-          Placeholder section — proves scroll behaviour, not real content
-        </p>
-      </section>
+      <Hero />
+      <PartnerLogos />
+      <DashboardAnalytics />
+      <FeatureTable />
+      <ProcessTrack />
+      <PriceEstimator />
+      <MediaWall />
+      <VideoBox />
+      <CanvasWorkspace />
+      <EditorialGrid />
+      <ReviewColumns />
+      <TeamDirectory />
+      <PricingMatrix />
+      <FAQIndex />
+      <StatusDashboard />
+      <IntakeSheet />
+      <ResourceFeed />
+      <ConversionPanel />
+      <RegionalDirectory />
     </main>
   );
 }

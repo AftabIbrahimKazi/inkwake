@@ -21,6 +21,12 @@
   --space-4xl: 64px;
   --space-5xl: 96px;
 
+  /* RULE 07 gap: project has no fixed-size scale token file yet (flagged,
+     not invented) — this single-purpose var is the minimal token-compliant
+     stand-in for the mobile-nav drawer width, shared verbatim (320px)
+     across all three apps so the unified drawer mechanism is truly 1:1:1. */
+  --iw-size-drawer: 320px;
+
   /* Colour palette (raw values) */
   --color-black: #000000;
   --color-white: #ffffff;
@@ -54,6 +60,23 @@
   --color-brand-accent-alt: var(--color-magenta);
   --color-brand-gradient-start: var(--color-magenta);
   --color-brand-gradient-end: var(--color-violet);
+
+  /* Strata's own text-primary/bg-primary/border-primary utilities (and any
+     component that uses --st-primary internally) read this variable at
+     runtime — this is Strata's documented custom-theme mechanism (README
+     "Custom theme": [data-st-theme="brand"] { --st-primary: ... }), not a
+     new class. Wiring it to the brand accent makes every native `-primary`
+     utility brand-correct with zero custom CSS classes. Same technique for
+     -secondary (muted gray), -info (cyan highlight, closest existing slot),
+     bg-body/text-body (page surface/heading), and border (subtle divider). */
+  --st-primary: var(--color-brand-accent);
+  --st-primary-hover: var(--color-brand-accent-alt);
+  --st-secondary: var(--color-text-muted);
+  --st-info: var(--color-cyan-bright);
+  --st-bg: var(--color-bg-hero);
+  --st-text: var(--color-text-heading);
+  --st-text-muted: var(--color-text-muted);
+  --st-border: color-mix(in srgb, var(--color-line-subtle) 10%, transparent);
 }
 
 /* Strata's own theme system natively supports "dim" as a first-class value
@@ -98,100 +121,190 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Base resets on bare HTML elements (not component classes) — Strata's
+   utilities require a class on each element, so they structurally cannot
+   reset UA defaults project-wide the way a tag selector can. Per the
+   cascade-layers spec, ANY unlayered rule always beats ANY layered
+   utility regardless of specificity or source order, so these stay scoped
+   to the specific elements that carry default UA margin/padding rather
+   than `*`, which would defeat every spacing utility in the app. */
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
   margin: 0;
 }
 
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* No `color: inherit` here — that's unlayered CSS, and per the cascade-
+   layers spec ANY unlayered rule beats ANY layered rule regardless of
+   specificity, so it was silently defeating every text-primary/text-white/
+   text-muted/text-body utility on every <a> tag site-wide (a real,
+   widespread bug this caught: buttons and links rendering with invisible,
+   same-as-background text). Every anchor in this build carries its own
+   explicit color utility, so this reset only needs to remove the
+   underline. */
 a {
-  color: inherit;
   text-decoration: none;
+}
+
+/* ── Genuine Strata gaps only, below this line ──────────────────────────
+   Everything that WAS here and could be expressed as a Strata utility
+   (container centering, header padding, cart badge, theme-toggle chrome,
+   nav-link/nav-heading color, promo-panel background, badge dot, etc.) has
+   been moved to utility classes directly in markup and removed from this
+   file. What remains is confirmed, via coverage.js and the framework's own
+   structural rules, to have NO utility equivalent:
+   - pseudo-classes/state selectors (:hover, [aria-expanded="true"] …) can
+     never become utilities (Strata has no hover: variant syntax)
+   - backdrop-filter, background-clip, animation, letter-spacing: 0 utility
+     coverage
+   - line-height has only named lh-1/lh-base, no arbitrary bracket form,
+     and neither named step matches these exact pixel values
+   - width has no breakpoint-scoped arbitrary form (w-md-[40%] silently
+     no-ops — confirmed via coverage.js's --zero trap detection)
+   - the mega-menu/mobile-drawer transition CURVES (cubic-bezier) are
+     pixel/timing-matched to tailwind-app's Alpine transitions from an
+     earlier session — transition-timing-function only has named keywords,
+     no arbitrary form, so an exact custom curve cannot be a utility */
+
+.iw-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (min-width: 768px) {
+  .iw-footer-newsletter {
+    width: 40%;
+  }
+}
+
+.iw-mega-shell[data-st-visible="true"] {
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.iw-mega-shell[data-st-visible="false"] {
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.iw-mega-panel[data-st-visible] {
+  transform: none;
+  transition-property: opacity;
+}
+
+.iw-mega-panel[data-st-visible="true"] {
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.iw-mega-panel[data-st-visible="false"] {
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.iw-mobile-drawer[data-st-visible] {
+  transition-duration: 300ms;
+  transition-property: transform, visibility;
+  transition-timing-function: ease-in-out;
+}
+
+.iw-mobile-drawer[data-st-visible="true"] {
+  transform: translateX(0);
+}
+
+.iw-mobile-drawer[data-st-visible="false"] {
+  transform: translateX(100%);
+}
+
+.iw-mobile-backdrop[data-st-visible] {
+  transform: none;
+  transition-duration: 300ms;
+  transition-property: opacity, visibility;
+  transition-timing-function: linear;
+}
+
+.iw-mobile-backdrop[data-st-visible="true"] {
+  opacity: 0.5;
+}
+
+.iw-mobile-backdrop[data-st-visible="false"] {
+  opacity: 0;
+}
+
+.iw-hero-title {
+  line-height: 40px;
 }
 
 .iw-brand-gradient {
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background: linear-gradient(to right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
-  background-clip: text;
   color: transparent;
+  letter-spacing: -0.025em; /* matches tailwind-app's tracking-tight */
 }
 
 .iw-nav-link,
-.iw-nav-heading {
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color var(--st-duration-theme) var(--st-easing);
-}
-
-.iw-nav-heading {
-  color: var(--color-text-heading);
+.iw-nav-heading,
+.iw-column-heading {
+  line-height: 20px; /* matches tailwind-app's text-sm utility (14px/1.25rem) */
 }
 
 .iw-nav-link:hover {
   color: var(--color-brand-accent);
 }
 
-.iw-column-heading {
-  color: var(--color-text-heading);
-}
-
-.iw-promo-panel {
-  background: linear-gradient(to bottom right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
-}
-
-.iw-icon-btn {
-  color: var(--color-text-muted);
-  transition: color var(--st-duration-theme) var(--st-easing);
-}
-
 .iw-icon-btn:hover {
   color: var(--color-brand-accent);
 }
 
-.iw-cart-badge {
-  align-items: center;
-  background: var(--color-brand-accent);
-  border-radius: 50%;
-  color: var(--color-white);
-  display: flex;
-  font-size: var(--font-size-xs);
-  height: var(--space-lg);
-  justify-content: center;
-  position: absolute;
-  right: calc(var(--space-sm) * -1);
-  top: calc(var(--space-sm) * -1);
-  width: var(--space-lg);
-}
-
 .iw-theme-toggle {
-  background: transparent;
-  border: 1px solid var(--color-line-subtle);
-  border-radius: 999px;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
-  padding: var(--space-xs) var(--space-md);
-  text-transform: capitalize;
-  transition: color var(--st-duration-theme) var(--st-easing);
+  letter-spacing: 0.025em; /* matches tailwind-app's tracking-wide */
+  line-height: 16px;
 }
 
 .iw-theme-toggle:hover {
   color: var(--color-text-heading);
 }
 
-.iw-chevron {
-  transition: transform var(--st-duration-theme) var(--st-easing);
-}
-
 [aria-expanded="true"] .iw-chevron {
   transform: rotate(180deg);
 }
 
-.iw-subscribe-btn {
+/* Generic active-pill state hook, reused by every selectable button group
+   in Step 4 (FAQ category tabs, pricing period toggle, canvas workspace
+   pose/finish/palette pickers, region tabs) — JS only ever flips the
+   data-active value (never toggles classes, per this project's state
+   convention), and per Strata's own rule 1 a state/attribute selector can
+   never be expressed as a utility class, so this one small rule is
+   genuinely unavoidable rather than a shortcut. */
+.iw-pill[data-active="true"] {
   background: var(--color-brand-accent);
-  border: 0;
+  border-color: var(--color-brand-accent);
   color: var(--color-white);
-  transition: background var(--st-duration-theme) var(--st-easing);
+}
+
+.iw-subscribe-btn {
+  line-height: 20px;
 }
 
 .iw-subscribe-btn:hover {
@@ -199,21 +312,11 @@ a {
 }
 
 .iw-newsletter-input {
-  background: transparent;
-  border: 1px solid var(--color-line-subtle);
-  color: var(--color-text-heading);
+  line-height: 20px;
 }
 
 .iw-newsletter-input::placeholder {
   color: var(--color-text-muted);
-}
-
-.iw-badge-dot {
-  background: var(--color-brand-accent);
-  border-radius: 50%;
-  display: inline-block;
-  height: var(--space-sm);
-  width: var(--space-sm);
 }
 
 .iw-marquee {

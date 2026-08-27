@@ -21,6 +21,12 @@
   --space-4xl: 64px;
   --space-5xl: 96px;
 
+  /* RULE 07 gap: project has no fixed-size scale token file yet (flagged,
+     not invented) — this single-purpose var is the minimal token-compliant
+     stand-in for the mobile-nav drawer width, shared verbatim (320px)
+     across all three apps so the unified drawer mechanism is truly 1:1:1. */
+  --iw-size-drawer: 320px;
+
   /* Colour palette (raw values) */
   --color-black: #000000;
   --color-white: #ffffff;
@@ -64,8 +70,86 @@
   --bs-body-bg: var(--color-bg-hero);
   --bs-body-color: var(--color-text-heading);
   --bs-heading-color: var(--color-text-heading);
-  --bs-secondary-rgb: 163, 163, 163; /* = --color-neutral-400, feeds .text-secondary */
-  --bs-border-color: var(--color-line-subtle);
+  /* !important: Bootstrap's own `:root,[data-bs-theme=light]` rule sets this
+     same variable at equal specificity and loads after this file (the
+     project's known bootstrap.min.css cascade-order gotcha), so it would
+     otherwise silently win over this override. */
+  --bs-secondary-rgb: 163, 163, 163 !important; /* = --color-neutral-400, feeds .text-secondary */
+  /* tailwind-app uses border-border-subtle/10 (10% opacity) everywhere, not
+     the full-strength token — Bootstrap's [data-bs-theme=dark] block also
+     sets --bs-border-color, at equal specificity, loading after this file,
+     so !important is needed the same way as --bs-secondary-rgb above. */
+  --bs-border-color: color-mix(in srgb, var(--color-line-subtle) 10%, transparent) !important;
+
+  /* Bootstrap's --bs-primary/-rgb feed .text-primary/.bg-primary/.border-
+     primary/.link-primary directly at runtime (verified against
+     bootstrap.min.css — they reference rgba(var(--bs-primary-rgb),...)),
+     so this one override makes those four native utilities brand-accurate
+     everywhere in Step 4's sections with zero new custom classes. */
+  /* !important: same cascade-order gotcha as --bs-secondary-rgb/--bs-border-
+     color above — bootstrap.min.css's own `:root` rule sets these at equal
+     specificity and loads after this file. */
+  --bs-primary: var(--color-brand-accent) !important;
+  --bs-primary-rgb: 124, 58, 237 !important; /* = --color-violet, Bootstrap's utilities need the pre-split RGB triplet */
+}
+
+/* .btn-primary, .nav-pills, and .list-group's active states do NOT read
+   --bs-primary — each bakes its own component-scoped variables (--bs-btn-,
+   --bs-nav-pills-, --bs-list-group-) to a hardcoded hex in bootstrap.min.css (verified by
+   inspecting the compiled CSS). Overriding those component-scoped
+   variables on Bootstrap's own selectors is the same technique as
+   --bs-navbar-padding-y below — not a new class, not a style override,
+   just using Bootstrap's own CSS custom-property API for a real gap in
+   its precompiled (not Sass-rebuilt) output. */
+/* !important throughout this block: same cascade-order gotcha as
+   --bs-primary above — every one of these selectors also exists, at equal
+   specificity, in bootstrap.min.css, which loads after this file. */
+.btn-primary {
+  --bs-btn-bg: var(--color-brand-accent) !important;
+  --bs-btn-border-color: var(--color-brand-accent) !important;
+  --bs-btn-hover-bg: var(--color-brand-accent-alt) !important;
+  --bs-btn-hover-border-color: var(--color-brand-accent-alt) !important;
+  --bs-btn-active-bg: var(--color-brand-accent-alt) !important;
+  --bs-btn-active-border-color: var(--color-brand-accent-alt) !important;
+  --bs-btn-disabled-bg: var(--color-brand-accent) !important;
+  --bs-btn-disabled-border-color: var(--color-brand-accent) !important;
+}
+
+.nav-pills {
+  --bs-nav-pills-link-active-bg: var(--color-brand-accent) !important;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--color-brand-accent) !important;
+  --bs-btn-border-color: var(--color-brand-accent) !important;
+  --bs-btn-hover-bg: var(--color-brand-accent) !important;
+  --bs-btn-hover-border-color: var(--color-brand-accent) !important;
+  --bs-btn-active-bg: var(--color-brand-accent) !important;
+  --bs-btn-active-border-color: var(--color-brand-accent) !important;
+  --bs-btn-disabled-color: var(--color-brand-accent) !important;
+  --bs-btn-disabled-border-color: var(--color-brand-accent) !important;
+}
+
+.list-group {
+  --bs-list-group-active-bg: var(--color-brand-accent) !important;
+  --bs-list-group-active-border-color: var(--color-brand-accent) !important;
+  --bs-list-group-active-color: var(--color-white) !important;
+}
+
+/* .form-check-input:checked and .form-range's thumb are hardcoded hex in
+   bootstrap.min.css, not variable-driven at all (a genuine gap in the
+   precompiled build, same class of issue as the ones above). */
+.form-check-input:checked {
+  background-color: var(--color-brand-accent) !important;
+  border-color: var(--color-brand-accent) !important;
+}
+
+.form-range::-webkit-slider-thumb {
+  background-color: var(--color-brand-accent) !important;
+}
+
+.form-range::-moz-range-thumb {
+  background-color: var(--color-brand-accent) !important;
 }
 
 /* data-theme-shade drives OUR OWN tokens for all 3 shades (dark/light/dim).
@@ -82,8 +166,8 @@
   --bs-body-bg: var(--color-bg-hero);
   --bs-body-color: var(--color-text-heading);
   --bs-heading-color: var(--color-text-heading);
-  --bs-secondary-rgb: 82, 82, 82; /* = --color-neutral-600 */
-  --bs-border-color: var(--color-line-subtle);
+  --bs-secondary-rgb: 82, 82, 82 !important; /* = --color-neutral-600 */
+  --bs-border-color: color-mix(in srgb, var(--color-line-subtle) 10%, transparent) !important;
 }
 
 [data-theme-shade="dim"] {
@@ -95,8 +179,8 @@
   --bs-body-bg: var(--color-bg-hero);
   --bs-body-color: var(--color-text-heading);
   --bs-heading-color: var(--color-text-heading);
-  --bs-secondary-rgb: 163, 163, 163;
-  --bs-border-color: var(--color-line-subtle);
+  --bs-secondary-rgb: 163, 163, 163 !important;
+  --bs-border-color: color-mix(in srgb, var(--color-line-subtle) 10%, transparent) !important;
 }
 
 html {
@@ -137,6 +221,7 @@ a {
    own theming system cannot express, so it's the one legitimate exception. */
 .hero__title {
   font-size: var(--font-size-4xl);
+  line-height: 40px; /* matches tailwind-app's text-4xl utility (2.25rem/2.5rem) */
 }
 
 .hero__subtitle {
@@ -149,35 +234,221 @@ a {
   background: linear-gradient(to right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
   background-clip: text;
   color: transparent;
+  letter-spacing: -0.025em; /* matches tailwind-app's tracking-tight */
 }
 
-.iw-nav-link {
+/* tailwind-app/strata-app show plain text for category triggers, no caret —
+   Bootstrap's dropdown-toggle adds one via ::after with no built-in
+   modifier class to remove it, so this is a genuine custom override. */
+.dropdown-toggle.iw-nav-link::after {
+  display: none;
+}
+
+/* mega-menu.js calls Bootstrap's Dropdown.show() on hover, and Bootstrap's
+   own show() focuses the toggle as a matter of course — correct for a real
+   click, but it means hovering (not just tabbing to) a category now shows
+   the browser's default focus ring, which tailwind-app/strata-app never
+   do since they never programmatically focus on hover. Keep the ring for
+   real keyboard navigation (:focus-visible) only. */
+.dropdown-toggle.iw-nav-link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.iw-nav-link,
+.navbar-nav .nav-link.iw-nav-link,
+.dropdown-item.iw-nav-link {
   color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  line-height: 20px; /* matches tailwind-app's text-sm utility (14px/1.25rem) */
   text-decoration: none;
   transition: color var(--duration-theme) ease;
 }
 
-.iw-nav-link:hover {
+/* Bootstrap's .container snaps to fixed breakpoint widths (1140px at xl,
+   1320px at xxl) and has no arbitrary max-width utility — this wrapper
+   matches tailwind-app's max-w-6xl (1152px) exactly, the one dimension
+   Bootstrap's own container system cannot express. */
+.iw-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1152px;
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
+  width: 100%;
+}
+
+/* Bootstrap ships no backdrop-filter utility and no 12px vertical-spacer
+   step (its scale jumps 8px -> 16px) — both are genuine gaps, not
+   overridden defaults. */
+.iw-header {
+  background: color-mix(in srgb, var(--color-bg-surface) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-line-subtle) 10%, transparent);
+}
+
+.iw-header-bar {
+  /* Bootstrap's own theming variables — defaults don't match tailwind-app's
+     spec (12px vertical padding, 0 extra brand/link padding), and .navbar's
+     own rule redeclares all of these at the same specificity after this
+     file loads, so each needs !important the same way .text-secondary did. */
+  --bs-navbar-padding-y: var(--space-md) !important;
+  --bs-navbar-brand-padding-y: 0 !important;
+  --bs-navbar-nav-link-padding-x: 0 !important;
+}
+
+.navbar-brand.iw-brand-gradient {
+  font-size: var(--font-size-lg);
+}
+
+/* fs-1..fs-6 are Bootstrap's fixed heading scale (fs-5 = 1.25rem/20px) — it
+   has no step matching the shared 18px logo token used everywhere else. */
+.iw-footer-brand {
+  font-size: var(--font-size-lg);
+}
+
+/* Bootstrap ships no grid-template-columns utility at all (only the
+   flexbox-based row/col system, which produces gutters via padding on each
+   item rather than a true `gap` — that pads the first/last item in from the
+   container edge, unlike tailwind-app's CSS Grid). Real CSS Grid here
+   matches tailwind-app's grid-cols-2/4/8 exactly, edge-to-edge, and avoids
+   the row/col padding-gutter side effect entirely. Also covers the same
+   64px/32px spacer-scale gap noted before (Bootstrap's scale stops at 5 =
+   48px). */
+.iw-footer-outer {
+  padding-top: var(--space-4xl) !important;
+  padding-bottom: var(--space-4xl) !important;
+}
+
+/* Bootstrap's col-5 is 5/12 = 41.7%, not the 40% tailwind-app/strata-app use
+   (md:w-2/5) — no col-* step lands on exactly 40%. */
+@media (min-width: 768px) {
+  .iw-footer-newsletter {
+    width: 40%;
+  }
+}
+
+.iw-footer-badges {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+  padding-top: var(--space-2xl) !important;
+  padding-bottom: var(--space-2xl) !important;
+}
+
+.iw-footer-columns {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .iw-footer-badges {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .iw-footer-columns {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .iw-footer-columns {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+.iw-nav-link:hover,
+.navbar-nav .nav-link.iw-nav-link:hover,
+.dropdown-item.iw-nav-link:hover {
   color: var(--color-brand-accent);
 }
 
-.dropdown-menu.iw-mega-panel {
+/* tailwind-app splits the mega-menu into two tiers: an outer wrapper that
+   fades+slides ONCE per open/close session (border, background, position),
+   and each category's inner content, which only fades (opacity, no slide)
+   when switching — the border/background never re-transition on a switch.
+   Bootstrap's per-category .dropdown-menu structure has no equivalent
+   shared outer element, so giving border/background to each panel meant
+   every category switch re-faded the border along with the content — a
+   real, visible flicker tailwind-app never has. .iw-mega-shell is the
+   outer-wrapper equivalent: a single element (not a .dropdown-menu, sits
+   behind all of them) that shows/hides once for "is any category open"
+   (toggled in mega-menu.js), carrying the border/background/slide
+   transition. Each .dropdown-menu keeps only the content-level opacity
+   fade, matching tailwind-app's inner FADE_TRANSITION (opacity only). */
+.iw-mega-shell {
   background: var(--color-bg-surface);
-  border: 1px solid var(--color-line-subtle);
+  border-top: 1px solid color-mix(in srgb, var(--color-line-subtle) 10%, transparent);
+  left: 0;
+  right: 0;
+  top: 100%;
+  position: absolute;
+  /* height is set from JS (mega-menu.js) to match whichever category's
+     content is currently active — content height varies per category
+     (different column link counts), so a fixed value here would clip
+     taller categories or leave a gap under shorter ones. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 150ms cubic-bezier(0.4, 0, 1, 1), transform 150ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 150ms cubic-bezier(0.4, 0, 1, 1);
+  z-index: 1;
+}
+
+.iw-mega-shell.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 200ms cubic-bezier(0, 0, 0.2, 1), transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dropdown-menu.iw-mega-panel {
+  background: transparent;
+  border: 0;
   border-radius: 0;
   margin-top: 0;
+  display: block;
+  /* Bootstrap's own .dropdown-menu CSS has no explicit left/inset — that's
+     normally supplied dynamically by Popper. With Popper disabled
+     (data-bs-display="static" on the toggle, to avoid a transient
+     button-relative transform on rapid category switches), a panel that
+     isn't the currently-.show one falls back to its CSS "static position"
+     (wherever it would sit in normal flow — i.e. under its own trigger
+     button), so switching categories showed the closing panel still
+     anchored under its old button while the opening one snapped to the
+     left edge. Pinning left/right explicitly here makes horizontal
+     position deterministic regardless of Bootstrap/Popper state. */
+  left: 0;
+  right: 0;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 1, 1);
+  pointer-events: none;
+}
+
+.dropdown-menu.iw-mega-panel.show {
+  opacity: 1;
+  transition: opacity 200ms cubic-bezier(0, 0, 0.2, 1);
+  pointer-events: auto;
 }
 
 .iw-column-heading {
   color: var(--color-text-heading);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
 }
 
 .iw-promo-panel {
   background: linear-gradient(to bottom right, var(--color-brand-gradient-start), var(--color-brand-gradient-end));
 }
 
+/* Bootstrap's .btn sets its own line-height (1.5) and border (1px), which
+   pad the button beyond its 20x20 svg's own box — tailwind-app/strata-app
+   use plain unstyled buttons here, shrink-wrapped to the icon exactly. */
 .btn-link.iw-icon-btn {
+  border: 0;
   color: var(--color-text-muted);
+  display: inline-flex;
+  line-height: 1;
   transition: color var(--duration-theme) ease;
 }
 
@@ -201,10 +472,12 @@ a {
 }
 
 .btn.iw-theme-toggle {
-  border: 1px solid var(--color-line-subtle);
+  border: 1px solid color-mix(in srgb, var(--color-line-subtle) 20%, transparent);
   border-radius: 999px;
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
+  letter-spacing: 0.025em; /* matches tailwind-app's tracking-wide */
+  line-height: 16px;
   padding: var(--space-xs) var(--space-md);
   text-transform: capitalize;
 }
@@ -213,16 +486,36 @@ a {
   color: var(--color-text-heading);
 }
 
-.offcanvas.iw-offcanvas {
+/* #iwMobileNav.iw-offcanvas (id + class), not .offcanvas.iw-offcanvas (two
+   classes): bootstrap.min.css's own .offcanvas.offcanvas-end also carries
+   two-class specificity and loads after this file, so an equal-specificity
+   width here would lose on source order — the id bump wins outright, no
+   !important needed (RULE 14). */
+#iwMobileNav.iw-offcanvas {
   background: var(--color-bg-surface);
   color: var(--color-text-heading);
+  width: var(--iw-size-drawer);
+}
+
+/* Bootstrap's default .navbar-toggler-icon is a background-image SVG with
+   its own hardcoded stroke colour — can't theme it via tokens, and it looks
+   nothing like tailwind-app/strata-app's plain 3-bar icon. Same visual
+   hamburger everywhere: three themable bars, no background-image. */
+.iw-navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.iw-toggler-bar {
+  background: var(--color-text-heading);
+  height: 1px;
+  width: var(--space-xl);
 }
 
 .accordion.iw-accordion {
   --bs-accordion-active-bg: transparent;
   --bs-accordion-active-color: var(--color-brand-accent);
   --bs-accordion-bg: transparent;
-  --bs-accordion-border-color: var(--color-line-subtle);
+  --bs-accordion-border-color: color-mix(in srgb, var(--color-line-subtle) 10%, transparent);
   --bs-accordion-btn-color: var(--color-text-heading);
   --bs-accordion-btn-focus-box-shadow: none;
   --bs-accordion-color: var(--color-text-heading);
@@ -238,6 +531,10 @@ a {
   text-transform: uppercase;
 }
 
+.iw-bg-surface {
+  background: var(--color-bg-surface);
+}
+
 .iw-footer {
   background: var(--color-bg-surface);
 }
@@ -247,6 +544,8 @@ a {
   border: 0;
   border-radius: 999px;
   color: var(--color-white);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
   padding: var(--space-xs) var(--space-lg);
   transition: background var(--duration-theme) ease;
 }
@@ -258,9 +557,12 @@ a {
 
 .form-control.iw-newsletter-input {
   background: transparent;
-  border: 1px solid var(--color-line-subtle);
+  border: 1px solid color-mix(in srgb, var(--color-line-subtle) 20%, transparent);
   border-radius: 999px;
   color: var(--color-text-heading);
+  font-size: var(--font-size-sm);
+  line-height: 20px;
+  padding: var(--space-xs) var(--space-lg);
 }
 
 .form-control.iw-newsletter-input::placeholder {
@@ -288,6 +590,7 @@ a {
   color: var(--color-white);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
+  line-height: 16px; /* matches tailwind-app's text-xs utility (0.75rem/1rem) */
   white-space: nowrap;
 }
 

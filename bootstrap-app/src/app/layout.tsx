@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Geist_Mono } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -23,19 +18,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${geistMono.variable}`}
+      className={`${spaceGrotesk.variable}`}
       data-bs-theme="dark"
       data-theme-shade="dark"
     >
       <head>
         <link rel="stylesheet" href="/vendor/bootstrap.min.css" />
       </head>
-      <body className="app-body">
+      <body className="app-body" suppressHydrationWarning>
         <Header />
         {children}
         <Footer />
         <script src="/vendor/bootstrap.bundle.min.js" defer></script>
         <script src="/js/theme-toggle.js" defer></script>
+        <script src="/js/mega-menu.js" defer></script>
+        <script src="/js/shop-interactions.js" defer></script>
         <script src="/js/ink-cursor.js" defer></script>
       </body>
     </html>
