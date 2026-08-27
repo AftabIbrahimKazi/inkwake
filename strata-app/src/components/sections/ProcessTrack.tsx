@@ -8,7 +8,7 @@ const STEPS = [
 export default function ProcessTrack() {
   return (
     <section className="bg-[var(--color-bg-surface)] w-100">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-3xl)] py-[var(--space-4xl)]">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-3xl)] py-[var(--space-4xl)]">
         <div className="d-flex flex-column gap-[var(--space-sm)] text-center">
           <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">From sketch to shelf</span>
           <h2 className="text-body fw-bold fs-[var(--font-size-3xl)]">How a drop gets made</h2>

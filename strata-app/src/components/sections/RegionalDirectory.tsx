@@ -27,8 +27,8 @@ const REGIONS = [
 
 export default function RegionalDirectory() {
   return (
-    <section className="iw-bg-surface bg-[var(--color-bg-surface)] w-100">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
+    <section className="bg-[var(--color-bg-surface)] w-100">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
         <div className="d-flex flex-column gap-[var(--space-sm)]">
           <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">Where we ship from</span>
           <h2 className="text-body fw-bold fs-[var(--font-size-3xl)]">Regional directory</h2>

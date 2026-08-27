@@ -1,7 +1,7 @@
 export default function PriceEstimator() {
   return (
-    <section className="iw-bg-surface bg-[var(--color-bg-surface)] w-100" id="priceEstimator">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column flex-md-row align-items-md-center gap-[var(--space-3xl)] py-[var(--space-4xl)]">
+    <section className="bg-[var(--color-bg-surface)] w-100" id="priceEstimator">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column flex-md-row align-items-md-center gap-[var(--space-3xl)] py-[var(--space-4xl)]">
         <div className="d-flex flex-column gap-[var(--space-md)] flex-fill">
           <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">Price estimator</span>
           <h2 className="text-body fw-bold fs-[var(--font-size-3xl)]">Build your own estimate</h2>

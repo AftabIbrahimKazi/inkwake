@@ -26,8 +26,8 @@ const PARTNERS = [
 
 export default function PartnerLogos() {
   return (
-    <section className="iw-bg-surface bg-[var(--color-bg-hero)] w-100">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
+    <section className="bg-[var(--color-bg-hero)] w-100">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
         <p className="text-muted text-center fs-[var(--font-size-xs)] fw-bold text-uppercase">
           Trusted by studios and print houses worldwide
         </p>

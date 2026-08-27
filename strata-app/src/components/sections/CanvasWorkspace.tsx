@@ -9,7 +9,7 @@ const PALETTE_OPTIONS = ["Ink Violet", "Neon Magenta", "Cyan Flare"];
 export default function CanvasWorkspace() {
   return (
     <section className="bg-[var(--color-bg-surface)] w-100" id="canvasWorkspace">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column flex-md-row gap-[var(--space-3xl)] py-[var(--space-4xl)]">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column flex-md-row gap-[var(--space-3xl)] py-[var(--space-4xl)]">
         <div className="card bg-[var(--color-bg-hero)] flex-fill p-[var(--space-3xl)] d-flex flex-column align-items-center justify-content-center gap-[var(--space-md)]">
           <span className="text-muted fs-[var(--font-size-xs)] fw-bold text-uppercase">Live preview</span>
           <div className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] ratio ratio-1x1 rounded-[16px] w-75"></div>

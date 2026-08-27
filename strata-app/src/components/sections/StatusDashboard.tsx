@@ -14,7 +14,7 @@ const STATUS_CARDS = [
 export default function StatusDashboard() {
   return (
     <section className="bg-[var(--color-bg-hero)] w-100">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
         <div className="d-flex flex-column gap-[var(--space-sm)]">
           <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">Your account</span>
           <h2 className="text-body fw-bold fs-[var(--font-size-3xl)]">Track orders and drops, in real time</h2>

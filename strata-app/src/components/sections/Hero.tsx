@@ -14,7 +14,7 @@ export default function Hero() {
         suppressHydrationWarning
       />
 
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] position-relative py-[var(--space-5xl)] pe-none">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] position-relative py-[var(--space-5xl)] pe-none">
         <div className="d-grid gtc-[1fr] gtc-md-[1fr_1fr] gap-[var(--space-3xl)] align-items-center">
           <div className="d-flex flex-column align-items-start gap-[var(--space-xl)]">
             <span className="border-[1px_solid_var(--color-brand-accent)] text-primary rounded-pill fs-[var(--font-size-xs)] fw-bold text-uppercase pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-lg)] pe-[var(--space-lg)]">

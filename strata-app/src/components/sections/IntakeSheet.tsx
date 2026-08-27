@@ -4,7 +4,7 @@ const ADDON_OPTIONS = ["Rush production", "Gift packaging", "Certificate of auth
 export default function IntakeSheet() {
   return (
     <section className="bg-[var(--color-bg-surface)] w-100" id="intakeSheet">
-      <div className="iw-container mx-auto w-100 max-w-[56rem] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
+      <div className="mx-auto w-100 max-w-[56rem] px-[var(--space-xl)] d-flex flex-column gap-[var(--space-xl)] py-[var(--space-4xl)]">
         <div className="d-flex flex-column gap-[var(--space-sm)] text-center">
           <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">Custom commissions</span>
           <h2 className="text-body fw-bold fs-[var(--font-size-3xl)]">Intake sheet</h2>

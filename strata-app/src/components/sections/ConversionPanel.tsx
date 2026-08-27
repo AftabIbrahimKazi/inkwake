@@ -1,7 +1,7 @@
 export default function ConversionPanel() {
   return (
-    <section className="iw-promo-panel bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] w-100">
-      <div className="iw-container mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column align-items-center gap-[var(--space-xl)] py-[var(--space-4xl)] text-center">
+    <section className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] w-100">
+      <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column align-items-center gap-[var(--space-xl)] py-[var(--space-4xl)] text-center">
         <span className="badge bg-[color-mix(in_srgb,var(--color-black)_25%,transparent)] rounded-pill text-white text-uppercase">
           Winter Collection closes soon
         </span>
