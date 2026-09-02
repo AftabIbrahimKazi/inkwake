@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmark Verification — Inkwake</title>
+<style>
+  :root {
+    --bg: #f5f7fa; --surface: #ffffff; --border: #dde2e9;
+    --ink: #1a2028; --ink-soft: #4b5563; --muted: #7b8494;
+    --good: #1f9d70; --warn: #c98a12; --crit: #d1483c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0; padding: 40px 24px 80px; line-height: 1.6;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  h2 { font-size: 18px; margin: 32px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .meta { font-family: ui-monospace, monospace; font-size: 12.5px; color: var(--muted); margin-bottom: 28px; }
+  .verdict {
+    display: inline-block; font-family: ui-monospace, monospace; font-weight: 700;
+    padding: 4px 14px; border-radius: 999px; background: var(--good); color: #fff; font-size: 13px;
+    margin-bottom: 4px;
+  }
+  code { background: #eef1f5; padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+  pre {
+    background: #10131a; color: #e8ebf0; padding: 14px 16px; border-radius: 8px;
+    overflow-x: auto; font-size: 12.5px; line-height: 1.5;
+  }
+  .steps { padding-left: 0; list-style: none; }
+  .steps li { margin-bottom: 10px; padding-left: 26px; position: relative; }
+  .steps li::before { content: attr(data-mark); position: absolute; left: 0; }
+  .findings li { margin-bottom: 10px; }
+  .findings li.warn { color: var(--ink); }
+  .warn-tag { color: var(--warn); font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { font-family: ui-monospace, monospace; font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .04em; }
+  a { color: #0ea5e9; }
+  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="verdict">PASS</span>
+  <h1>Verification: authenticity of the post-minification benchmark report</h1>
+  <div class="meta">
+    Verified 2026-09-03 · scope: 60-run Lighthouse benchmark (bench4) behind
+    <a href="https://claude.ai/code/artifact/7d804219-37cd-4574-a7a1-71859da9403b">report 3</a> —
+    the strata-app CSS-minification before/after comparison
+  </div>
+
+  <h2>Claim</h2>
+  <p>
+    Report 3 presents 60 genuine, isolated Lighthouse captures against the live
+    post-minification deployment, with a before/after section claiming Strata's
+    stylesheet transfer dropped 11.5&nbsp;KB&nbsp;→&nbsp;8.7&nbsp;KB gzipped and total
+    page 215.1&nbsp;KB&nbsp;→&nbsp;212.3&nbsp;KB, attributable to the Lightning CSS
+    minification change and not to Tailwind/Bootstrap (both unchanged).
+  </p>
+
+  <h2>Method</h2>
+  <p>
+    No app UI to drive — the surface is the 60 raw Lighthouse JSON captures, the live
+    production deployment they measured, and the published HTML derived from both.
+    Verified by: raw-file integrity checks, independent re-derivation of every published
+    number from raw JSON with a fresh script, confirming the live site still serves the
+    exact CSS byte-count the report's premise depends on, and re-checking the specific
+    outlier claim in the report's own corrected narrative against the raw trace.
+  </p>
+
+  <h2>Steps</h2>
+  <ol class="steps">
+    <li data-mark="✅">Counted files across all 6 batch directories — 10/10 each, 60 total.</li>
+    <li data-mark="✅">Hashed all 60 files — 60/60 unique MD5s, no duplicates.</li>
+    <li data-mark="✅">Checked <code>requestedUrl</code> and <code>configSettings.formFactor</code> per file against its directory — 0/60 mismatched.</li>
+    <li data-mark="✅">Checked <code>fetchTime</code> chronology — real 419-second span across the batch, consistent with genuine execution.</li>
+    <li data-mark="✅">Independently recomputed score medians, CSS/JS time medians, stylesheet-byte averages, and total-byte averages from raw files with a fresh script and diffed against the published artifact's embedded data — <b>6/6 app×mode combinations matched exactly</b>, including the stylesheet-byte figures the before/after claim rests on (Strata mobile: 8876.9 bytes independently computed vs. 8876.9 published).</li>
+    <li data-mark="✅">Curled the live production site — <code>strata.output.css</code> is 26,465 bytes, single-line, no comments, matching the report's premise. Confirmed <code>git log</code> shows the minification commit (<code>19fe072</code>) pushed to <code>origin/dev</code>.</li>
+    <li data-mark="✅">Recomputed the "Tailwind/Bootstrap moved by single-digit bytes" claim independently — deltas were 0.2, 7.1, 5.7, 4.8 bytes across the four mobile/desktop combinations. Claim holds precisely.</li>
+    <li data-mark="🔍">Re-pulled the raw trace behind the report's own corrected outlier explanation (Strata mobile run 1, "js≈3111ms... 9 files each ~340ms") → mostly holds, one imprecision found (below).</li>
+  </ol>
+
+  <h3>Sample evidence</h3>
+  <pre>Strata mobile run-01, 9 scripts, all requested within a 10ms window (863.3-873.2ms):
+  durations: 24.4, 248.7, 477.2, 491.7, 234.7, 455.2, 463.0, 246.4, 470.0 ms
+  SUM (report's "js time"): 3111.3ms  — matches report exactly
+  WALL-CLOCK SPAN (what "speed" should mean): 494.1ms</pre>
+
+  <h3>Before / after — independently confirmed</h3>
+  <table>
+    <thead><tr><th>Metric</th><th>Mobile before</th><th>Mobile after</th><th>Desktop before</th><th>Desktop after</th></tr></thead>
+    <tbody>
+      <tr><td>Stylesheet transfer (avg, gzip)</td><td>11.47 KB</td><td>8.67 KB</td><td>11.47 KB</td><td>8.68 KB</td></tr>
+      <tr><td>Total page transfer (avg)</td><td>215.1 KB</td><td>212.3 KB</td><td>215.1 KB</td><td>212.3 KB</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Findings</h2>
+  <ul class="findings">
+    <li>All underlying data is genuine, correctly attributed, and every published number traces back to the raw captures with zero drift across two independent full recomputations (this report and its predecessor). The live deployment matches the code change the report's entire premise depends on.</li>
+    <li class="warn"><span class="warn-tag">⚠ Minor:</span> the report's own outlier explanation says "9 files each ~340ms" — that's the mean, not the actual distribution (which spans 24ms to 492ms, a 20x range). Doesn't change the correctness of the core claim (sum vs. wall-clock), just overstates uniformity in the specific example.</li>
+    <li>No repeat of the "scheduler stall" error from the prior report — the correction that shipped in report 3 is itself accurate under inspection, unlike what it was correcting.</li>
+  </ul>
+
+  <footer>
+    Related: <a href="https://claude.ai/code/artifact/28aa7bb1-b483-44b5-82d8-dafa95a117f9">report 1</a> ·
+    <a href="https://claude.ai/code/artifact/930b95e3-9c8c-4946-88a4-309809e9229f">report 2</a> ·
+    <a href="https://claude.ai/code/artifact/7d804219-37cd-4574-a7a1-71859da9403b">report 3</a>
+  </footer>
+
+</div>
+</body>
+</html>
