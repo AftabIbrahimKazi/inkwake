@@ -223,7 +223,7 @@ export default function Header() {
       <div
         id="strataMobileNav"
         data-st-visible="false"
-        className="iw-mobile-drawer position-fixed top-0 end-0 bottom-0 z-[60] w-[var(--iw-size-drawer)] d-flex d-lg-none flex-column bg-[var(--color-bg-surface)] border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] overflow-[hidden] p-4"
+        className="iw-mobile-drawer position-fixed top-0 end-0 bottom-0 z-[60] w-[var(--iw-size-drawer)] d-flex d-lg-none flex-column bg-[var(--color-bg-surface)] border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] overflow-hidden p-4"
       >
         <div className="d-flex align-items-center justify-content-between border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] pb-3 mb-3">
           <span className="iw-brand-gradient bg-[linear-gradient(to_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] fw-bold fs-[var(--font-size-lg)]">Inkwake</span>
@@ -240,7 +240,7 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="d-flex flex-column overflow-[auto]">
+        <div className="d-flex flex-column overflow-auto">
           {MEGA_CATEGORIES.map((category, i) => (
             <div key={category.label} className="border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] py-3">
               <button
