@@ -1,48 +1,62 @@
 # Handover — Inkwake
 
-Updated: 2026-08-27 · Branch: master · Repo: https://github.com/AftabIbrahimKazi/inkwake (public, pushed)
+Updated: 2026-09-02 · Branch: `dev` (4 ahead of `master`) · Repo: https://github.com/AftabIbrahimKazi/inkwake
 
-**`project -guide/project-plan.md` is the source of truth for this project.**
+**`project-guide/project-plan.md` is the source of truth for this project.**
 
 ## Current state
 
-Step 4 (22 sections) is fully built and verified in **all three apps** — tailwind-app (:3000), bootstrap-app (:3001), strata-app (:3002). Sections 1/2/22 (alert bar, mega menu, mega footer) were already done from Step 3; this run added the remaining 19 in each app. Each app is strictly single-framework: tailwind-app uses only Tailwind utilities + Alpine, bootstrap-app only Bootstrap classes/components (plus token-level `--bs-*` variable overrides, not new classes), strata-app only Strata utilities/components (plus `--st-*` variable overrides). All three render with zero console/hydration errors and matching content/order. **Uncommitted** — nothing from this build has been committed yet.
+Step 4 is complete, committed and deployed. All three apps are live and publicly reachable, each serving 19 sections:
 
-User pasted a Lighthouse run for strata-app (dev server) showing FCP 1.2s/0.99, Speed Index 2.0s/0.99, LCP 2.6s/0.88 (JSON was truncated before CLS/TBT). Not yet discussed — see Next steps.
+| App | URL |
+|---|---|
+| tailwind | https://inkwake-tailwind.vercel.app |
+| bootstrap | https://bootstrap-app-phi.vercel.app |
+| strata | https://strata-app-ten.vercel.app |
+
+`master` is still at Steps 1–3 and needs a PR from `dev` (git standard G-03 forbids direct pushes). strata-app runs strata-css **1.9.0**. A production payload audit exists as an artifact: https://claude.ai/code/artifact/6920904b-865d-4680-9ced-723fcab50992
 
 ## Last session
 
-Built tailwind-app's 19 sections first, audited them (screenshot-driven, not eyeballing) and fixed real bugs, then ported to bootstrap-app and strata-app per the new per-app-sequential workflow (see Decisions). User then asked for real e-commerce mechanics (prices, add-to-cart, product-tied reviews) instead of abstract SaaS-pattern content, applied across all three. Each port surfaced and fixed its own framework-specific rendering bugs (below).
+Committed and deployed all three apps; audited real production payloads; wrote two specs for the Strata framework (`strata-variant-system.md`, `strata-utility-gaps.md` — both now largely superseded, see Next steps); upgraded strata-css to 1.9.0 and synced ai-dev-kit.
 
 ## Decisions & why
 
-- **Workflow is sequential per app, not simultaneous**: build/verify a feature fully in tailwind-app first, then port to bootstrap-app, then strata-app — no more triple-checking every small change across all three at once. User directive, 2026-08-25.
-- **Bootstrap/Strata color theming uses variable overrides, not new classes**: both frameworks' own color utilities (`text-primary`/`bg-primary`/etc., and Bootstrap's `.btn-primary`) are driven by CSS custom properties (`--bs-primary`/`--st-primary`); overriding those (not writing new component classes) is each framework's own sanctioned theming API. User-approved for bootstrap-app; then confirmed as the right approach for strata-app too after `strata.config.js`'s `theme.colors` turned out to be a non-functional no-op in the installed version (verified by reading the framework source — not wired to any generated CSS).
-- **Existing header/footer/mega-menu components were retrofitted to pure framework utilities** in bootstrap-app and strata-app, stripping custom CSS down to only what's structurally impossible as a utility (pseudo-classes/state selectors — never expressible as utilities in either framework; backdrop-filter, background-clip, animations — zero utility coverage in both, confirmed via strata's own `coverage.js`).
+- **Benchmark headline is payload, not the Lighthouse composite** — 412 KB of byte-identical React/Next JS in all three apps swamps the CSS variable; the composite score mostly grades what was deliberately held constant.
+- **Strata's variant syntax is the class form (`hover:bg-primary`), not the attribute form** — the attribute form measured better (constant atomic CSS, ~12% less gzipped HTML) but Shopify theme-editor class fields and Liquid `link_to` accept a class string only. Deployment constraint beats byte measurement.
+- **Dual syntax rejected** — measured 18% worse total; gzip rewards repetition and mixing forms destroys it.
+- **Utility additions judged on cross-theme recurrence, not usage counts** — `backdrop-filter` and `background-clip: text` forced hand-written CSS here and were still rejected as theme-specific; `line-clamp`/`text-wrap` scored zero uses and were still accepted.
+- **`coding-standards/frameworks/bootstrap.md` is not synced from ai-dev-kit** — the kit adds nothing to it, and the local copy carries the 2026-08-24 exception permitting raw Bootstrap utilities in `bootstrap-app`.
+- **Bootstrap/Strata theming uses CSS-variable overrides, not new classes** — each framework's sanctioned theming API.
 
-### Root-cause bugs worth not rediscovering
-- **Strata's JIT scanner (`node_modules/strata-css/src/scanner/scanner.js`) only extracts class names from string literals written *textually inside* a `className=`/`class=` attribute** — it never scans plain data objects/arrays declared elsewhere in the file, even in the same file. Any "store class names in a data array, interpolate by variable" pattern is invisible to it. Fix: inline the literal strings directly in the className expression (ternary chains work — the scanner recurses into `${...}` interpolations).
-- **`a { color: inherit }` (or any bare-tag base reset) is unlayered CSS, and unlayered always beats layered utilities** regardless of specificity — this was silently defeating every `text-*` color utility on every `<a>` tag site-wide in strata-app (invisible white-on-white buttons/links). Removed the color reset; kept only `text-decoration: none`.
-- **Bootstrap's/Strata's `.ratio > *` rule stretches every direct child to fill the tile** — any element with more than one direct child inside `.ratio`/`ratio-*` gets ALL of them stretched (a circular play button became a giant ellipse). Fix: wrap all overlay content in a single child so only that one absorbs the stretch.
-- **Strata's `bg-opacity-25` sets a CSS variable that `bg-primary` never reads** (confirmed via compiled output — `bg-primary` is a plain `background-color: var(--st-primary)`, no opacity formula) — genuine framework no-op, not a usage mistake. Use `bg-primary-subtle` instead.
-- **Tailwind/Bootstrap grid-span mosaics need spans summing to exactly the column count per row** — a mismatched sum leaves a broken empty gap at the row's end, not a wrapped tile.
+### Root-cause facts worth not rediscovering
+
+- **Unlayered CSS beats every `@layer` regardless of specificity.** Layer order is evaluated before specificity, so an unlayered base-state rule silently suppresses a layered `:hover` rule. This is why `a { color: inherit }` defeated every `text-*` utility site-wide. To override a state you must name the state.
+- **Strata's JIT scanner only reads string literals written textually inside a `class`/`className` attribute.** Class names held in data arrays or objects elsewhere in the file are invisible to it, even in the same file.
+- **Bootstrap's `.ratio > *` stretches every direct child** — wrap overlay content in a single child. (Fixed in Strata 1.9.0, which scopes the fill rule to replaced elements; still live in bootstrap-app.)
+- **Tailwind/Bootstrap grid-span mosaics need spans summing to exactly the column count per row** — a mismatch leaves a gap, not a wrap.
 
 ## Known issues
 
-- None currently open against the verified build. All three apps' working trees have this session's changes **uncommitted**.
+- **bootstrap-app: 20 style classes unplaced** after a markup reconstruction — `iw-bg-surface` ×7, `iw-promo-panel` ×7, `iw-accordion-button` ×3, plus `iw-icon-btn`, `iw-brand-gradient`, `iw-accordion` ×1 each. Symptom: panels missing surface backgrounds, gradient tiles rendering flat; bootstrap renders 66 buttons where the other two render 77. Mapping them from tailwind failed (bootstrap uses `.table` and other structures where tailwind uses cards) — each needs visual confirmation against the live URL.
+- **All three apps still titled "Create Next App"** in production (`src/app/layout.tsx` metadata). Will sink the Lighthouse SEO category.
+- **`strata.components.js` is 259 bytes because `@strata-packages/*` are not installed.** The build warns every run. With them installed it is ~43.9 KB. The payload report leans on that 259 bytes as Strata's decisive JS win, so the figure currently measures an incomplete install.
+- **No images anywhere** — Step 5 not started, so all payload figures are a pre-asset baseline.
 
 ## Next steps
 
-1. Discuss the pasted Lighthouse result for strata-app — clarify whether it was a dev-server run (likely, given no mention of a production build) vs. the production build Step 6 actually calls for, and whether to chase the LCP number now or wait until Step 5/6.
-2. Review and commit this session's work (all three apps' Step 4 sections + header/footer utility retrofits) before starting anything new.
-3. Step 5 (Asset Swap): placeholder gradients/content are still in place everywhere — real AI-generated imagery not yet started.
-4. GitHub + Vercel per-app deploys still not done (flagged since Step 1).
-5. Decide theme-choice persistence (localStorage) — still resets to dark on reload in all three, unresolved since Step 3.
+1. **Fix bootstrap-app's 20 unplaced classes.** Open https://bootstrap-app-phi.vercel.app, name what looks wrong, fix per element. Inference already failed once here — a named symptom pins the element far faster.
+2. **Decide the `@strata-packages/*` question** — installing them makes the benchmark honest but narrows Strata's total-weight lead. Whichever way, the payload report needs updating to say which was measured.
+3. **Fix the `Create Next App` metadata** in all three `layout.tsx` (content must stay identical across apps).
+4. **Step 5 — asset swap.** Placeholder gradients everywhere; real imagery will move LCP substantially.
+5. **PR `dev` → `master`.**
+6. Optional: delete or commit `strata-variant-system.md` and `strata-utility-gaps.md` — strata-css 1.9.0 shipped their scope (variant system, `aspect-*`, `w-md-[40%]`, zero-declaration warning). Their residual value is the deferred/rejected family analysis.
 
 ## Don't touch / gotchas
 
 - `bootstrap-app`'s `<body>` needs its `app-body` class (specificity workaround vs Bootstrap's own `body{}` rule).
 - `public/js/ink-cursor.js` is identical across all three apps by design — copy-diff, don't hand-edit separately.
-- `strata-app` needs `npm run strata:build` after ANY class/CSS change if the watch process isn't running — `public/strata.output.css` goes stale silently otherwise (bit twice this session before remembering).
-- Mobile nav drawer mechanism (fixed right-side, 320px via `--iw-size-drawer`, backdrop) is intentionally identical across all three apps — a deliberate exception to the "UI-state JS stays framework-native" guardrail, user-approved.
-- `bootstrap-app/public/js/mega-menu.js` and `strata-app/public/js/interactions.js` both drive a shared `#iwMegaShell` height computed ONCE from the max category height — never re-set it per hover/switch, that reintroduces the border-refade/height-snap bug fixed earlier.
+- `bootstrap-app/public/js/mega-menu.js` and `strata-app/public/js/interactions.js` both drive a shared `#iwMegaShell` height computed **once** from the max category height — never re-set it per hover/switch, that reintroduces the border-refade bug.
+- `bootstrap-app` keeps `iw-header-bar` in markup as a **JS hook only** — it carries no CSS; `mega-menu.js` queries it.
+- Mobile nav drawer (fixed right, 320px via `--iw-size-drawer`, backdrop) is intentionally identical across all three — a deliberate, user-approved exception to the "UI-state JS stays framework-native" guardrail.
+- strata-app's `npm run build` already runs `strata:build` first — no need to run it separately.
