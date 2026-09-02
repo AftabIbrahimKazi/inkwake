@@ -24,7 +24,7 @@ export default function Footer() {
             third-party IP.
           </p>
 
-          <form className="iw-footer-newsletter d-flex flex-column gap-2">
+          <form className="d-flex flex-column gap-2 w-md-[40%]">
             <label htmlFor="footer-newsletter-email" className="iw-column-heading text-body fw-bold fs-[var(--font-size-sm)]">
               Join the newsletter
             </label>
@@ -33,7 +33,7 @@ export default function Footer() {
                 id="footer-newsletter-email"
                 type="email"
                 placeholder="you@example.com"
-                className="iw-newsletter-input text-body bg-[transparent] border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] flex-fill rounded-pill py-[var(--space-xs)] px-[var(--space-lg)] fs-[var(--font-size-sm)]"
+                className="iw-newsletter-input text-body bg-[transparent] border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] flex-fill rounded-pill py-[var(--space-xs)] px-[var(--space-lg)] fs-[var(--font-size-sm)] placeholder:text-muted"
               />
               <button
                 type="submit"
@@ -61,7 +61,7 @@ export default function Footer() {
               <ul className="d-flex flex-column gap-2 list-unstyled">
                 {column.links.map((link) => (
                   <li key={link}>
-                    <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)]">
+                    <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] hover:text-primary">
                       {link}
                     </a>
                   </li>
@@ -75,7 +75,7 @@ export default function Footer() {
           <ul className="d-flex flex-wrap gap-4 list-unstyled">
             {SOCIAL_LINKS.map((social) => (
               <li key={social}>
-                <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)]">
+                <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] hover:text-primary">
                   {social}
                 </a>
               </li>

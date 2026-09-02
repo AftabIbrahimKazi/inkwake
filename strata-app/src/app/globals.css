@@ -169,18 +169,25 @@ a {
 /* ── Genuine Strata gaps only, below this line ──────────────────────────
    Everything that WAS here and could be expressed as a Strata utility
    (container centering, header padding, cart badge, theme-toggle chrome,
-   nav-link/nav-heading color, promo-panel background, badge dot, etc.) has
-   been moved to utility classes directly in markup and removed from this
-   file. What remains is confirmed, via coverage.js and the framework's own
-   structural rules, to have NO utility equivalent:
-   - pseudo-classes/state selectors (:hover, [aria-expanded="true"] …) can
-     never become utilities (Strata has no hover: variant syntax)
+   nav-link/nav-heading color, promo-panel background, badge dot, hover
+   color states via hover:/placeholder: variants shipped in 1.9.0, etc.)
+   has been moved to utility classes directly in markup and removed from
+   this file. What remains is confirmed, via coverage.js and the
+   framework's own structural rules, to have NO utility equivalent:
+   - [aria-expanded="true"] .iw-chevron is a relational selector Strata's
+     variant system doesn't cover — its 45 states are pseudo-classes
+     (hover, focus, checked, …) and group-/peer- relational variants,
+     not arbitrary ARIA-attribute selectors on a sibling/descendant
+   - .iw-pill[data-active="true"] is a project-defined data-attribute
+     value, not one of Strata's own state variants — same reason
+   - .iw-subscribe-btn:hover's brand-accent-alt has no matching variant:
+     hover:bg-primary resolves to --st-primary (the same as the base,
+     i.e. no visible change), not --st-primary-hover, so it can't
+     reproduce this button's intentional hover-shade change
    - backdrop-filter, background-clip, animation, letter-spacing: 0 utility
      coverage
    - line-height has only named lh-1/lh-base, no arbitrary bracket form,
      and neither named step matches these exact pixel values
-   - width has no breakpoint-scoped arbitrary form (w-md-[40%] silently
-     no-ops — confirmed via coverage.js's --zero trap detection)
    - the mega-menu/mobile-drawer transition CURVES (cubic-bezier) are
      pixel/timing-matched to tailwind-app's Alpine transitions from an
      earlier session — transition-timing-function only has named keywords,
@@ -189,12 +196,6 @@ a {
 .iw-header {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-
-@media (min-width: 768px) {
-  .iw-footer-newsletter {
-    width: 40%;
-  }
 }
 
 .iw-mega-shell[data-st-visible="true"] {
@@ -269,21 +270,9 @@ a {
   line-height: 20px; /* matches tailwind-app's text-sm utility (14px/1.25rem) */
 }
 
-.iw-nav-link:hover {
-  color: var(--color-brand-accent);
-}
-
-.iw-icon-btn:hover {
-  color: var(--color-brand-accent);
-}
-
 .iw-theme-toggle {
   letter-spacing: 0.025em; /* matches tailwind-app's tracking-wide */
   line-height: 16px;
-}
-
-.iw-theme-toggle:hover {
-  color: var(--color-text-heading);
 }
 
 [aria-expanded="true"] .iw-chevron {
@@ -313,10 +302,6 @@ a {
 
 .iw-newsletter-input {
   line-height: 20px;
-}
-
-.iw-newsletter-input::placeholder {
-  color: var(--color-text-muted);
 }
 
 .iw-marquee {

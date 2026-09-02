@@ -65,7 +65,7 @@ const MEGA_CATEGORIES = [
 
 function IconButton({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <button type="button" aria-label={label} className="iw-icon-btn text-muted transition d-flex bg-[transparent] border-[none] p-0">
+    <button type="button" aria-label={label} className="hover:text-primary text-muted transition d-flex bg-[transparent] border-[none] p-0">
       {children}
     </button>
   );
@@ -98,7 +98,7 @@ export default function Header() {
               <li key={category.label}>
                 <button
                   type="button"
-                  className="iw-nav-link text-muted transition bg-[transparent] border-[none] px-0 pt-[var(--space-sm)] pb-[var(--space-sm)] fs-[var(--font-size-sm)]"
+                  className="iw-nav-link text-muted transition bg-[transparent] border-[none] px-0 pt-[var(--space-sm)] pb-[var(--space-sm)] fs-[var(--font-size-sm)] hover:text-primary"
                   data-hover-target={`#strataMega${i}`}
                 >
                   {category.label}
@@ -113,7 +113,7 @@ export default function Header() {
             type="button"
             data-theme-toggle
             aria-label="Cycle colour theme"
-            className="iw-theme-toggle iw-pill text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)]"
+            className="iw-theme-toggle iw-pill text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)] hover:text-body"
           >
             dark
           </button>
@@ -132,7 +132,7 @@ export default function Header() {
             </svg>
           </IconButton>
 
-          <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn text-muted transition position-relative bg-[transparent] border-[none] p-0">
+          <button type="button" aria-label="Cart, 0 items" className="hover:text-primary text-muted transition position-relative bg-[transparent] border-[none] p-0">
             <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
               <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
@@ -185,7 +185,7 @@ export default function Header() {
                   <ul className="d-flex flex-column gap-2 list-unstyled">
                     {column.links.map((link) => (
                       <li key={link}>
-                        <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] text-nowrap">
+                        <a href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] text-nowrap hover:text-primary">
                           {link}
                         </a>
                       </li>
@@ -230,7 +230,7 @@ export default function Header() {
           <button
             type="button"
             aria-label="Close navigation menu"
-            className="iw-icon-btn text-muted transition bg-[transparent] border-[none] p-0"
+            className="hover:text-primary text-muted transition bg-[transparent] border-[none] p-0"
             data-toggle-target="#strataMobileNav"
             data-toggle-attr="visible"
           >
@@ -245,7 +245,7 @@ export default function Header() {
             <div key={category.label} className="border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] py-3">
               <button
                 type="button"
-                className="iw-nav-link text-body d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-md)]"
+                className="iw-nav-link text-body d-flex align-items-center justify-content-between w-100 bg-[transparent] border-[none] p-0 fw-bold fs-[var(--font-size-md)] hover:text-primary"
                 data-toggle-target={`#strataMobileCat${i}`}
                 data-toggle-attr="collapsed"
                 aria-expanded="false"
@@ -276,7 +276,7 @@ export default function Header() {
                       className="d-grid gap-2 pt-2 gtc-[1fr_1fr]"
                     >
                       {column.links.map((link) => (
-                        <a key={link} href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)]">
+                        <a key={link} href="#" className="iw-nav-link text-muted transition fs-[var(--font-size-sm)] hover:text-primary">
                           {link}
                         </a>
                       ))}
@@ -302,7 +302,7 @@ export default function Header() {
                 <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" strokeLinecap="round" />
               </svg>
             </IconButton>
-            <button type="button" aria-label="Cart, 0 items" className="iw-icon-btn text-muted transition position-relative bg-[transparent] border-[none] p-0">
+            <button type="button" aria-label="Cart, 0 items" className="hover:text-primary text-muted transition position-relative bg-[transparent] border-[none] p-0">
               <svg aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M6 8h12l-1 12H7L6 8Z" strokeLinejoin="round" />
                 <path d="M9 8V6a3 3 0 0 1 6 0v2" strokeLinecap="round" />
@@ -317,7 +317,7 @@ export default function Header() {
             type="button"
             data-theme-toggle
             aria-label="Cycle colour theme"
-            className="iw-theme-toggle text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)]"
+            className="iw-theme-toggle text-muted transition rounded-pill text-capitalize border-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_20%,transparent)] pt-[var(--space-xs)] pb-[var(--space-xs)] ps-[var(--space-md)] pe-[var(--space-md)] fs-[var(--font-size-xs)] hover:text-body"
           >
             dark
           </button>
