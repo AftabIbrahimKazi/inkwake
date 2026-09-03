@@ -50,6 +50,8 @@ Each app has its own `CLAUDE.md` with its app-specific standards table — read 
 
 **Resolved (AI-12, 2026-08-24):** custom CSS class signature (per `coding-standards/css-standards.md` RULE 11) is **`iw-`** (short for Inkwake), shared across all three apps — e.g. `iw-marquee`. Applies only to hand-written custom CSS classes (the last resort per RULE 18); framework/utility classes are unaffected.
 
+**Override — single branch (2026-09-03):** `coding-standards/git-standards.md`'s `main → beta → test → dev` flow does **not** apply to this repo. `project-plan.md` Step 1 specifies "single GitHub repo, single branch" — this is a benchmark test repo, not a production app with a release pipeline. All work happens directly on `master`. There is no `dev`/`test`/`beta` branch, and none should be created for routine work; if a genuinely risky experiment needs isolation, use a short-lived branch off `master`, merge or discard it, and delete it immediately — never leave a second long-lived branch drifting from `master` the way `dev` did for two weeks.
+
 ---
 
 ## Business-Logic vs UI-State JS (guardrail from project-plan.md)
@@ -92,4 +94,4 @@ Not active yet. If work on the three apps is ever split across parallel Claude s
 
 ## Project State
 
-Step 1 (environment/infra) is done: all three apps scaffolded, each builds and serves its framework's placeholder "Hello World" correctly. GitHub repo creation and Vercel deploys are not yet done. See `project-plan.md` for the full step list and `handover.md` (once created) for session-to-session state.
+Steps 1–4 are done: all three apps are live on Vercel with 19 sections each. See `handover.md` for current session-to-session state and `project-plan.md` for the full step list — `handover.md` is the more current source, since this file is only updated on structural/standards changes.
