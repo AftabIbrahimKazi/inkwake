@@ -42,10 +42,21 @@ npm run dev
 
 Lighthouse (mobile + desktop presets), 10 isolated runs per app per mode, against the live Vercel deployments — not local dev servers. Medians are reported alongside means since single-machine parallel test runs introduce CPU-contention noise that skews individual passes.
 
+## Benchmark reports
+
+Four reports, in order, each published as a standalone page:
+
+1. [First run](https://claude.ai/artifact/28aa7bb1-b483-44b5-82d8-dafa95a117f9) — single-pass snapshot, pre-asset baseline
+2. [10-run isolated benchmark](https://claude.ai/artifact/930b95e3-9c8c-4946-88a4-309809e9229f) — mobile + desktop, medians, pre-asset baseline
+3. [Post-minification benchmark](https://claude.ai/artifact/7d804219-37cd-4574-a7a1-71859da9403b) — after switching `strata-app`'s CSS build to Lightning CSS
+4. [Real-asset benchmark](https://claude.ai/artifact/3diRxkpSor2fcQhEb7zFw6) — after Step 5's image/video swap, includes a single-run-vs-median sanity check
+
+Each is a private Claude Artifact — the link alone won't open for anyone without owner-granted access; sharing is set per-page from its own Share menu.
+
 ## Branching
 
 Single branch (`master`). This is a test/benchmark repo, not a production release pipeline — there's no `dev`/`test`/`beta` split. See `CLAUDE.md`'s git-standards override for the reasoning.
 
 ## Status
 
-Steps 1–4 of the project plan are complete and live. Step 5 (real imagery/video, currently placeholder gradients) is next. See `handover.md` for the current session-to-session state.
+Steps 1–5 of the project plan are complete and live — all real imagery/video shipped, no placeholder gradients remaining. See `handover.md` for the current session-to-session state.
