@@ -7,9 +7,9 @@ const FEATURE_ARTICLE = {
 };
 
 const SIDE_ARTICLES = [
-  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read" },
-  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read" },
-  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read" },
+  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read", image: "/images/editorial-side-01.webp" },
+  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read", image: "/images/editorial-side-02.webp" },
+  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read", image: "/images/editorial-side-03.webp" },
 ];
 
 export default function EditorialGrid() {
@@ -24,7 +24,9 @@ export default function EditorialGrid() {
         <div className="row g-4">
           <div className="col-12 col-md-8">
             <a href="#" className="d-flex flex-column gap-3 text-decoration-none">
-              <div className="ratio ratio-16x9 rounded-4"></div>
+              <div className="ratio ratio-16x9 rounded-4 overflow-hidden">
+                <img src="/images/editorial-feature.webp" alt={FEATURE_ARTICLE.title} className="object-fit-cover" />
+              </div>
               <span className="text-primary small fw-bold text-uppercase">{FEATURE_ARTICLE.category}</span>
               <h3 className="text-white fw-bold fs-3">{FEATURE_ARTICLE.title}</h3>
               <p className="text-secondary small">{FEATURE_ARTICLE.excerpt}</p>
@@ -35,7 +37,9 @@ export default function EditorialGrid() {
           <div className="col-12 col-md-4 d-flex flex-column gap-4">
             {SIDE_ARTICLES.map((article) => (
               <a href="#" key={article.title} className="d-flex gap-3 border-bottom pb-4 text-decoration-none">
-                <div className="ratio ratio-1x1 rounded-3 flex-shrink-0 w-25"></div>
+                <div className="ratio ratio-1x1 rounded-3 flex-shrink-0 w-25 overflow-hidden">
+                  <img src={article.image} alt={article.title} className="object-fit-cover" />
+                </div>
                 <div className="d-flex flex-column gap-1">
                   <span className="text-primary small fw-bold text-uppercase">{article.category}</span>
                   <h3 className="text-white fw-bold small">{article.title}</h3>

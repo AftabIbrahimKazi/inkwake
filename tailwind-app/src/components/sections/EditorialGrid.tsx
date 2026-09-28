@@ -7,9 +7,9 @@ const FEATURE_ARTICLE = {
 };
 
 const SIDE_ARTICLES = [
-  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read" },
-  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read" },
-  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read" },
+  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read", image: "/images/editorial-side-01.webp" },
+  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read", image: "/images/editorial-side-02.webp" },
+  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read", image: "/images/editorial-side-03.webp" },
 ];
 
 export default function EditorialGrid() {
@@ -23,7 +23,7 @@ export default function EditorialGrid() {
 
         <div className="grid grid-cols-1 gap-2xl md:grid-cols-3">
           <a href="#" className="group flex flex-col gap-lg md:col-span-2">
-            <div className="from-gradient-start to-gradient-end aspect-video w-full rounded-2xl bg-gradient-to-br"></div>
+            <img src="/images/editorial-feature.webp" alt={FEATURE_ARTICLE.title} className="aspect-video w-full rounded-2xl object-cover" />
             <span className="text-accent text-xs font-bold tracking-wide uppercase">{FEATURE_ARTICLE.category}</span>
             <h3 className="text-heading group-hover:text-accent text-2xl font-bold transition-colors duration-200">
               {FEATURE_ARTICLE.title}
@@ -35,7 +35,7 @@ export default function EditorialGrid() {
           <div className="flex flex-col gap-2xl">
             {SIDE_ARTICLES.map((article) => (
               <a href="#" key={article.title} className="group border-border-subtle/10 flex gap-lg border-b pb-2xl last:border-b-0 last:pb-0">
-                <div className="from-gradient-start to-gradient-end aspect-square h-20 w-20 flex-shrink-0 rounded-xl bg-gradient-to-br"></div>
+                <img src={article.image} alt={article.title} className="aspect-square h-20 w-20 flex-shrink-0 rounded-xl object-cover" />
                 <div className="flex flex-col gap-xs">
                   <span className="text-accent text-xs font-bold tracking-wide uppercase">{article.category}</span>
                   <h3 className="text-heading group-hover:text-accent text-sm font-bold transition-colors duration-200">

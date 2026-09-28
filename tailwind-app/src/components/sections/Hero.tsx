@@ -63,7 +63,11 @@ export default function Hero() {
               <span className="text-heading text-sm font-bold">Featured piece</span>
               <span className="text-accent text-xs font-bold tracking-wide uppercase">Limited</span>
             </div>
-            <div className="from-gradient-start to-gradient-end aspect-square w-full rounded-2xl bg-gradient-to-br"></div>
+            <img
+              src="/images/hero-main.webp"
+              alt="Ronin scale figure, Winter Collection"
+              className="aspect-square w-full rounded-2xl object-cover"
+            />
             <div className="flex items-center justify-between">
               <span className="text-heading text-lg font-bold">Ronin Scale Figure</span>
               <span className="text-accent text-lg font-bold">$128</span>

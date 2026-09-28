@@ -1,10 +1,10 @@
 const MEDIA_TILES = [
-  { title: "Winter Collection", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$128" },
-  { title: "Studio Process", col: "col-6 col-md-3", ratio: "ratio-1x1", price: null },
-  { title: "Collector Spotlight", col: "col-6 col-md-3", ratio: "ratio-1x1", price: null },
-  { title: "Behind the Ink", col: "col-12 col-md-6", ratio: "ratio-16x9", price: null },
-  { title: "Streetwear Drop", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$38" },
-  { title: "Print Series 04", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$22" },
+  { title: "Winter Collection", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$128", image: "/images/media-01.webp" },
+  { title: "Studio Process", col: "col-6 col-md-3", ratio: "ratio-1x1", price: null, image: "/images/media-02.webp" },
+  { title: "Collector Spotlight", col: "col-6 col-md-3", ratio: "ratio-1x1", price: null, image: "/images/media-03.webp" },
+  { title: "Behind the Ink", col: "col-12 col-md-6", ratio: "ratio-16x9", price: null, image: "/images/media-04.webp" },
+  { title: "Streetwear Drop", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$38", image: "/images/media-05.webp" },
+  { title: "Print Series 04", col: "col-6 col-md-3", ratio: "ratio-1x1", price: "$22", image: "/images/media-06.webp" },
 ];
 
 export default function MediaWall() {
@@ -20,6 +20,7 @@ export default function MediaWall() {
           {MEDIA_TILES.map((tile) => (
             <div key={tile.title} className={tile.col}>
               <a href="#" className={`ratio ${tile.ratio} rounded-4 position-relative d-block overflow-hidden text-decoration-none`}>
+                <img src={tile.image} alt={tile.title} className="object-fit-cover" />
                 {/* Bootstrap's `.ratio > *` rule (native, applies to any
                     direct child of a `.ratio` element) sets top:0 and
                     height:100% on this div, which silently overrides the

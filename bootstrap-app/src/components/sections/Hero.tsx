@@ -55,7 +55,9 @@ export default function Hero() {
                 <span className="text-white fw-bold small">Featured piece</span>
                 <span className="text-primary fw-bold small text-uppercase">Limited</span>
               </div>
-              <div className="ratio ratio-1x1 rounded-3"></div>
+              <div className="ratio ratio-1x1 rounded-3 overflow-hidden">
+                <img src="/images/hero-main.webp" alt="Ronin scale figure, Winter Collection" className="object-fit-cover" />
+              </div>
               <div className="d-flex align-items-center justify-content-between mt-3">
                 <span className="text-white fw-bold fs-5">Ronin Scale Figure</span>
                 <span className="text-primary fw-bold fs-5">$128</span>

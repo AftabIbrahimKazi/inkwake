@@ -3,3 +3,7 @@ node_modules/
 .env*.local
 *.log
 .DS_Store
+
+# Raw Step 5 asset uploads (staging only — already copied into each
+# app's public/images and public/video, byte-identical, for deployment)
+images-videos/

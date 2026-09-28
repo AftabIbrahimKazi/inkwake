@@ -64,7 +64,13 @@ export default function Hero() {
                 <span className="text-body fw-bold fs-[var(--font-size-sm)]">Featured piece</span>
                 <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">Limited</span>
               </div>
-              <div className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] ratio ratio-1x1 rounded-[16px] w-100"></div>
+              <div className="ratio ratio-1x1 rounded-[16px] w-100 overflow-hidden">
+                <img
+                  src="/images/hero-main.webp"
+                  alt="Ronin scale figure, Winter Collection"
+                  className="object-fit-cover w-100 h-100"
+                />
+              </div>
               <div className="d-flex align-items-center justify-content-between">
                 <span className="text-body fw-bold fs-[var(--font-size-lg)]">Ronin Scale Figure</span>
                 <span className="text-primary fw-bold fs-[var(--font-size-lg)]">$128</span>

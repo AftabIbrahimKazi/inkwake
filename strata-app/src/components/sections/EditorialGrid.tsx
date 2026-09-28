@@ -7,9 +7,9 @@ const FEATURE_ARTICLE = {
 };
 
 const SIDE_ARTICLES = [
-  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read" },
-  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read" },
-  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read" },
+  { category: "Interview", title: "Meet the sculptor behind the Winter Collection", readTime: "5 min read", image: "/images/editorial-side-01.webp" },
+  { category: "Guide", title: "How to store and display resin figures long-term", readTime: "4 min read", image: "/images/editorial-side-02.webp" },
+  { category: "Culture", title: "Why original IP is having a moment in collectibles", readTime: "6 min read", image: "/images/editorial-side-03.webp" },
 ];
 
 export default function EditorialGrid() {
@@ -24,7 +24,9 @@ export default function EditorialGrid() {
         <div className="row g-[var(--space-xl)]">
           <div className="col-12 col-md-8">
             <a href="#" className="d-flex flex-column gap-[var(--space-md)]">
-              <div className="ratio ratio-16x9 bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] rounded-[16px]"></div>
+              <div className="ratio ratio-16x9 rounded-[16px] overflow-hidden">
+                <img src="/images/editorial-feature.webp" alt={FEATURE_ARTICLE.title} />
+              </div>
               <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">{FEATURE_ARTICLE.category}</span>
               <h3 className="text-body fw-bold fs-[var(--font-size-2xl)]">{FEATURE_ARTICLE.title}</h3>
               <p className="text-muted fs-[var(--font-size-sm)]">{FEATURE_ARTICLE.excerpt}</p>
@@ -35,7 +37,9 @@ export default function EditorialGrid() {
           <div className="col-12 col-md-4 d-flex flex-column gap-[var(--space-xl)]">
             {SIDE_ARTICLES.map((article) => (
               <a href="#" key={article.title} className="border-bottom-[1px_solid_color-mix(in_srgb,var(--color-line-subtle)_10%,transparent)] d-flex gap-[var(--space-md)] pb-[var(--space-xl)]">
-                <div className="ratio ratio-1x1 bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] rounded-[12px] w-25 flex-shrink-0"></div>
+                <div className="ratio ratio-1x1 rounded-[12px] w-25 flex-shrink-0 overflow-hidden">
+                  <img src={article.image} alt={article.title} />
+                </div>
                 <div className="d-flex flex-column gap-[var(--space-xs)]">
                   <span className="text-primary fs-[var(--font-size-xs)] fw-bold text-uppercase">{article.category}</span>
                   <h3 className="text-body fw-bold fs-[var(--font-size-sm)]">{article.title}</h3>

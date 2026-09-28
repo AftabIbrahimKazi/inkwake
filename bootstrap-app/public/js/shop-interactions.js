@@ -103,5 +103,17 @@
         });
       }
     }
+
+    // --- Video box play button ---
+    // Bootstrap's collapse toggle (data-bs-toggle) hides the button itself
+    // declaratively; the <video> element's own playback still needs JS.
+    var playBtn = document.getElementById("videoPlayBtn");
+    var filmVideo = document.getElementById("winterFilmVideo");
+    if (playBtn && filmVideo) {
+      playBtn.addEventListener("click", function () {
+        filmVideo.setAttribute("controls", "");
+        filmVideo.play();
+      });
+    }
   });
 })();

@@ -12,7 +12,9 @@ export default function CanvasWorkspace() {
       <div className="mx-auto w-100 max-w-[1152px] px-[var(--space-xl)] d-flex flex-column flex-md-row gap-[var(--space-3xl)] py-[var(--space-4xl)]">
         <div className="card bg-[var(--color-bg-hero)] flex-fill p-[var(--space-3xl)] d-flex flex-column align-items-center justify-content-center gap-[var(--space-md)]">
           <span className="text-muted fs-[var(--font-size-xs)] fw-bold text-uppercase">Live preview</span>
-          <div className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] ratio ratio-1x1 rounded-[16px] w-75"></div>
+          <div className="ratio ratio-1x1 rounded-[16px] w-75 overflow-hidden">
+            <img src="/images/canvas-preview.webp" alt="Live sculpt preview" />
+          </div>
           <p data-workspace-preview className="text-body fw-bold fs-[var(--font-size-sm)]" suppressHydrationWarning>
             Standing · Matte · Ink Violet
           </p>

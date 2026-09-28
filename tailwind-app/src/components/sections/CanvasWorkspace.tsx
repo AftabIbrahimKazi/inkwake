@@ -19,9 +19,11 @@ export default function CanvasWorkspace() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-2xl px-xl py-4xl md:flex-row md:gap-4xl">
         <div className="border-border-subtle/10 bg-surface relative flex flex-1 flex-col items-center justify-center gap-lg rounded-3xl border p-3xl">
           <span className="text-muted text-xs font-bold tracking-wide uppercase">Live preview</span>
-          <div
-            className="from-gradient-start to-gradient-end aspect-square w-full max-w-[20rem] rounded-2xl bg-gradient-to-br transition-all duration-200"
-          ></div>
+          <img
+            src="/images/canvas-preview.webp"
+            alt="Live sculpt preview"
+            className="aspect-square w-full max-w-[20rem] rounded-2xl object-cover transition-all duration-200"
+          />
           <p className="text-heading text-sm font-bold" x-text="pose + ' · ' + finish + ' · ' + palette" suppressHydrationWarning>
             Standing · Matte · Ink Violet
           </p>

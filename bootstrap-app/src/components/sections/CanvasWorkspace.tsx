@@ -12,7 +12,9 @@ export default function CanvasWorkspace() {
       <div className="iw-container d-flex flex-column flex-md-row gap-5 py-5">
         <div className="card border flex-fill p-5 d-flex flex-column align-items-center justify-content-center gap-3">
           <span className="text-secondary small fw-bold text-uppercase">Live preview</span>
-          <div className="ratio ratio-1x1 rounded-4 w-75"></div>
+          <div className="ratio ratio-1x1 rounded-4 w-75 overflow-hidden">
+            <img src="/images/canvas-preview.webp" alt="Live sculpt preview" className="object-fit-cover" />
+          </div>
           <p data-workspace-preview className="text-white fw-bold small" suppressHydrationWarning>
             Standing · Matte · Ink Violet
           </p>

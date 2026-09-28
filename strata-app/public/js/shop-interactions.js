@@ -86,11 +86,12 @@
 
     // --- Video box play button ---
     var playBtn = document.getElementById("videoPlayBtn");
-    if (playBtn) {
+    var filmVideo = document.getElementById("winterFilmVideo");
+    if (playBtn && filmVideo) {
       playBtn.addEventListener("click", function () {
         playBtn.dataset.stVisible = "false";
-        var loading = document.getElementById("videoLoading");
-        if (loading) loading.dataset.stVisible = "true";
+        filmVideo.setAttribute("controls", "");
+        filmVideo.play();
       });
     }
 

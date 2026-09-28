@@ -1,12 +1,12 @@
 const TEAM_MEMBERS = [
-  { name: "Yuki Amano", role: "Founder & Lead Sculptor" },
-  { name: "Theo Marchetti", role: "Head of Production" },
-  { name: "Nadia Osei", role: "Art Director" },
-  { name: "Kenji Waters", role: "Finishing Lead" },
-  { name: "Priya Shah", role: "Collector Relations" },
-  { name: "Malik Fontaine", role: "Print & Apparel Design" },
-  { name: "Elin Vasko", role: "Logistics Manager" },
-  { name: "Toma Ricci", role: "Community & Discord" },
+  { name: "Yuki Amano", role: "Founder & Lead Sculptor", image: "/images/team-01.webp" },
+  { name: "Theo Marchetti", role: "Head of Production", image: "/images/team-02.webp" },
+  { name: "Nadia Osei", role: "Art Director", image: "/images/team-03.webp" },
+  { name: "Kenji Waters", role: "Finishing Lead", image: "/images/team-04.webp" },
+  { name: "Priya Shah", role: "Collector Relations", image: "/images/team-05.webp" },
+  { name: "Malik Fontaine", role: "Print & Apparel Design", image: "/images/team-06.webp" },
+  { name: "Elin Vasko", role: "Logistics Manager", image: "/images/team-07.webp" },
+  { name: "Toma Ricci", role: "Community & Discord", image: "/images/team-08.webp" },
 ];
 
 export default function TeamDirectory() {
@@ -21,7 +21,9 @@ export default function TeamDirectory() {
         <div className="row row-cols-2 row-cols-md-4 g-4">
           {TEAM_MEMBERS.map((member) => (
             <div key={member.name} className="col d-flex flex-column align-items-center text-center gap-[var(--space-md)]">
-              <div className="bg-[linear-gradient(to_bottom_right,var(--color-brand-gradient-start),var(--color-brand-gradient-end))] ratio ratio-1x1 rounded-[16px] w-100"></div>
+              <div className="ratio ratio-1x1 rounded-[16px] w-100 overflow-hidden">
+                <img src={member.image} alt={member.name} />
+              </div>
               <div className="d-flex flex-column gap-[var(--space-xs)]">
                 <span className="text-body fw-bold fs-[var(--font-size-sm)]">{member.name}</span>
                 <span className="text-muted fs-[var(--font-size-xs)]">{member.role}</span>
