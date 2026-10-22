@@ -11,10 +11,15 @@
     "lint": "eslint",
     "lint:css": "stylelint \"src/app/globals.css\" \"strata.css\" --config ../coding-standards/tooling/stylelint.config.cjs"
   },
+  "overrides": {
+    "brace-expansion": "^5.0.12",
+    "postcss-selector-parser": "^7.1.6"
+  },
   "dependencies": {
-    "next": "16.3.2",
+    "next": "^16.4.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "source-map-js": "^1.2.2",
     "strata-css": "^1.9.0"
   },
   "devDependencies": {
